@@ -28,10 +28,10 @@ describe('POST /hydrate API endpoint', function() {
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
-      var body =res.body;
-      body.should.have.property('raw');
-      body.should.have.property('html');
-      body.should.have.property('content-encoding');
+
+      res.body.should.have.property('raw');
+      res.body.should.have.property('html');
+      res.body.should.have.property('content-encoding');
 
       done();
     });
