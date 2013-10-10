@@ -9,7 +9,6 @@ var fs = require('fs');
 var cluestrFileHydrater = require('../lib/cluestr-file-hydrater/index.js');
 
 var dummyHydrater = function(path, cb) {
-  console.log("Hydrating");
   cb(null, {
     foo: "bar",
     path: path,
@@ -18,12 +17,16 @@ var dummyHydrater = function(path, cb) {
 };
 
 describe('/hydrate webhooks', function() {
+  // Patch Cluestr URL
+  // Avoid uselessly pinging cluestr.com with invalid requests
+  process.env.CLUESTR_SERVER = 'http://localhost';
+
   var config = {
-    concurrency: 2,
-    hydrater_url: 'http://myhydrater.com'
+    hydrater_url: 'http://myhydrater.com',
+    hydrater_function: dummyHydrater
   };
 
-  var hydrationServer = cluestrFileHydrater.createServer(config, dummyHydrater);
+  var hydrationServer = cluestrFileHydrater.createServer(config);
 
   it('should be pinged with hydrater result', function(done) {
     //WARNING.
@@ -37,13 +40,11 @@ describe('/hydrate webhooks', function() {
     fileServer.use(restify.bodyParser());
 
     fileServer.get('/file', function(req, res, next) {
-      console.log("Asked for file");
       fs.createReadStream(__filename).pipe(res);
       next();
     });
 
     fileServer.patch('/result', function(req, res, next) {
-      console.log("Got results");
       // Uncomment on test timeout
       //console.log(req.params);
 

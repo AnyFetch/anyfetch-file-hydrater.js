@@ -4,16 +4,13 @@ var request = require('supertest');
 
 var cluestrFileHydrater = require('../lib/cluestr-file-hydrater/index.js');
 
-var dummyHydrater = function(path, cb) {
-  cb(null, {});
-};
 
 describe('POST /hydrate', function() {
   var config = {
-    concurrency: 2
+    hydrater_function: function() {},
   };
 
-  var server = cluestrFileHydrater.createServer(config, dummyHydrater);
+  var server = cluestrFileHydrater.createServer(config);
 
   it('should refuse request without file_path', function(done) {
     request(server).post('/hydrate')
