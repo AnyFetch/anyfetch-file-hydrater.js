@@ -9,7 +9,7 @@
   "main": "./lib/cluestr-file-hydrater",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Papiel/papiel_core"
+    "url": "https://github.com/Papiel/cluestr-file-hydrater"
   },
   "keywords": [
     "cluestr",
