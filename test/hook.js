@@ -8,12 +8,11 @@ var fs = require('fs');
 
 var cluestrFileHydrater = require('../lib/cluestr-file-hydrater/index.js');
 
-var dummyHydrater = function(path, cb) {
-  cb(null, {
-    foo: "bar",
-    path: path,
-    text: fs.readFileSync(path).toString()
-  });
+var dummyHydrater = function(path, document, cb) {
+  document.metadatas.path = path;
+  document.metadatas.text = fs.readFileSync(path).toString();
+
+  cb(null, document);
 };
 
 describe('/hydrate webhooks', function() {
@@ -64,9 +63,11 @@ describe('/hydrate webhooks', function() {
 
     request(hydrationServer).post('/hydrate')
       .send({
-        metadatas: {},
         file_path: 'http://127.0.0.1:1337/file',
-        callback: 'http://127.0.0.1:1337/result'
+        callback: 'http://127.0.0.1:1337/result',
+        metadatas: {
+          "foo": "bar"
+        }
       })
       .expect(204)
       .end(function() {});

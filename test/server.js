@@ -8,6 +8,7 @@ var cluestrFileHydrater = require('../lib/cluestr-file-hydrater/index.js');
 describe('POST /hydrate', function() {
   var config = {
     hydrater_function: function() {},
+    hydrater_url: 'http://myhydrater.com'
   };
 
   var server = cluestrFileHydrater.createServer(config);
