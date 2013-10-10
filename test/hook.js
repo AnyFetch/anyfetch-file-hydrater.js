@@ -1,5 +1,6 @@
 'use strict';
 
+require('should');
 var request = require('supertest');
 var restify = require('restify');
 var fs = require('fs');
@@ -11,13 +12,15 @@ var dummyHydrater = function(path, cb) {
   console.log("Hydrating");
   cb(null, {
     foo: "bar",
-    path: path
+    path: path,
+    text: fs.readFileSync(path).toString()
   });
 };
 
 describe('/hydrate webhooks', function() {
   var config = {
-    concurrency: 2
+    concurrency: 2,
+    hydrater_url: 'http://myhydrater.com'
   };
 
   var hydrationServer = cluestrFileHydrater.createServer(config, dummyHydrater);
@@ -43,9 +46,12 @@ describe('/hydrate webhooks', function() {
       console.log("Got results");
       // Uncomment on test timeout
       //console.log(req.params);
-      req.params.metadatas.should.have.property('raw');
-      req.params.metadatas.should.have.property('html');
-      req.params.metadatas.should.have.property('content-encoding', 'ISO-8859-1');
+
+      req.params.should.have.property('hydrater', config.hydrater_url + "/hydrate");
+      req.params.should.have.property('metadatas');
+      req.params.metadatas.should.have.property('foo', 'bar');
+      req.params.metadatas.should.have.property('path');
+      req.params.metadatas.should.have.property('text', fs.readFileSync(__filename).toString());
       res.send(204);
 
       next();
