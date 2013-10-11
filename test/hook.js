@@ -21,7 +21,6 @@ describe('/hydrate webhooks', function() {
   process.env.CLUESTR_SERVER = 'http://localhost';
 
   var config = {
-    hydrater_url: 'http://myhydrater.com',
     hydrater_function: dummyHydrater
   };
 
@@ -47,7 +46,6 @@ describe('/hydrate webhooks', function() {
       // Uncomment on test timeout
       //console.log(req.params);
 
-      req.params.should.have.property('hydrater', config.hydrater_url + "/hydrate");
       req.params.should.have.property('metadatas');
       req.params.metadatas.should.have.property('foo', 'bar');
       req.params.metadatas.should.have.property('path');

@@ -27,7 +27,6 @@ var myHydrationFunction = function(filePath, document, cb) {
 };
 
 var config = {
-  'hydrater_url': 'http://url.to.my.hydrater.com/',
   'hydrater_function': myHydrationFunction
 };
 
