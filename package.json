@@ -18,7 +18,9 @@
   "dependencies": {
     "async": "0.2.x",
     "restify": "2.6.x",
-    "request": "2.26.x"
+    "request": "2.26.x",
+    "coveralls": "~2.3.0",
+    "mocha-lcov-reporter": "0.0.1"
   },
   "devDependencies": {
     "mocha": "1.11.x",
