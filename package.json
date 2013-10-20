@@ -6,7 +6,8 @@
     "test": "NODE_ENV=test mocha --require blanket --reporter mocha-lcov-reporter test/",
     "lint": "jshint lib/ test/",
     "blanket": {
-        "pattern": "lib"
+        "pattern": "lib",
+        "data-cover-never": "node_modules"
       }
   },
   "main": "./lib/cluestr-file-hydrater",
