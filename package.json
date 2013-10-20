@@ -3,8 +3,11 @@
   "version": "0.1.3",
   "author": "Matthieu Bacconnier <matthieu.bacconnier@papiel.fr>",
   "scripts": {
-    "test": "NODE_ENV=test mocha -R spec test/",
-    "lint": "jshint lib/ test/"
+    "test": "NODE_ENV=test mocha --require blanket --reporter mocha-lcov-reporter test/",
+    "lint": "jshint lib/ test/",
+    "blanket": {
+        "pattern": "lib"
+      }
   },
   "main": "./lib/cluestr-file-hydrater",
   "repository": {
@@ -18,9 +21,7 @@
   "dependencies": {
     "async": "0.2.x",
     "restify": "2.6.x",
-    "request": "2.26.x",
-    "coveralls": "~2.3.0",
-    "mocha-lcov-reporter": "0.0.1"
+    "request": "2.26.x"
   },
   "devDependencies": {
     "mocha": "1.11.x",
