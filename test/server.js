@@ -38,7 +38,7 @@ describe('POST /hydrate', function() {
       .end(done);
   });
 
-  it('should immediately return 204', function(done) {
+  it('should immediately return 202', function(done) {
     this.timeout(300);
     request(server)
       .post('/hydrate')
@@ -47,7 +47,7 @@ describe('POST /hydrate', function() {
         'file_path': 'http://cluestr.com/file',
         'callback': 'http://cluestr.com/callback'
       })
-      .expect(204)
+      .expect(202)
       .end(done);
   });
 
