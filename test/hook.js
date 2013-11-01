@@ -31,7 +31,7 @@ describe('/hydrate webhooks', function() {
     // Is this test timeouting? This is due to should conditions being done beyond the standard event loop, and not properly bubbled up to Mocha.
     // So, in case of timeout, just uncomment the console.log a few lines below.
 
-    // Create a fake HTTP server
+    // Create a fake HTTP server to send a file and test results
     var fileServer = restify.createServer();
     fileServer.use(restify.acceptParser(fileServer.acceptable));
     fileServer.use(restify.queryParser());
@@ -43,18 +43,20 @@ describe('/hydrate webhooks', function() {
     });
 
     fileServer.patch('/result', function(req, res, next) {
-      // Uncomment on test timeout
-      //console.log(req.params);
+      try {
+        req.params.should.have.property('metadatas');
+        req.params.metadatas.should.have.property('foo', 'bar');
+        req.params.metadatas.should.have.property('path');
+        req.params.metadatas.should.have.property('text', fs.readFileSync(__filename).toString());
+        res.send(204);
 
-      req.params.should.have.property('metadatas');
-      req.params.metadatas.should.have.property('foo', 'bar');
-      req.params.metadatas.should.have.property('path');
-      req.params.metadatas.should.have.property('text', fs.readFileSync(__filename).toString());
-      res.send(204);
+        next();
 
-      next();
-
-      done();
+        done();
+      } catch(e) {
+        // We need a try catch cause mocha is try-catching on main event loop, and the server create a new stack. 
+        done(e);
+      }
     });
     fileServer.listen(1337);
 

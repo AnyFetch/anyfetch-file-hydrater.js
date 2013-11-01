@@ -65,7 +65,7 @@ describe('POST /hydrate', function() {
         if(err) {
           throw err;
         }
-
+        res.body.should.have.property('metadatas').and.have.property('hydrated').and.equal(true);
         done();
       });
   });
