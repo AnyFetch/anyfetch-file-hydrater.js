@@ -70,3 +70,16 @@ describe('POST /hydrate', function() {
       });
   });
 });
+
+describe('createServer()', function() {
+  it('should refuse to create without hydrater_function', function(done) {
+    try {
+      cluestrFileHydrater.createServer({});
+    } catch(e) {
+      e.toString().should.include('hydrater_function');
+      return done();
+    }
+
+    done(new Error("Hydrater function was not asked"));
+  });
+});
