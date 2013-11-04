@@ -27,7 +27,7 @@
   "devDependencies": {
     "mocha": "1.11.x",
     "should": "1.2.x",
-    "supertest": "0.7.x",
+    "supertest": "0.7.x"
   },
   "licence": "Copyright Papiel",
   "engines": {
