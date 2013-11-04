@@ -27,10 +27,6 @@ describe('/hydrate webhooks', function() {
   var hydrationServer = cluestrFileHydrater.createServer(config);
 
   it('should be pinged with hydrater result', function(done) {
-    //WARNING.
-    // Is this test timeouting? This is due to should conditions being done beyond the standard event loop, and not properly bubbled up to Mocha.
-    // So, in case of timeout, just uncomment the console.log a few lines below.
-
     // Create a fake HTTP server to send a file and test results
     var fileServer = restify.createServer();
     fileServer.use(restify.acceptParser(fileServer.acceptable));
