@@ -43,3 +43,8 @@ POST <your_url>/hydrate
   callback: <url-to-ping>
 ```
 
+### Optional parameters
+`createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
+
+* `concurrency`, max number of simultaneous calls to your hydrater function (default: 1)
+* `logger` function to use for logging error and success. Will get notified with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument.and not thrown).

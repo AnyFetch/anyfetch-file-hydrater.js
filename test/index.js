@@ -14,6 +14,11 @@ var dummyHydrater = function(path, document, cb) {
 describe('POST /hydrate', function() {
   var config = {
     hydrater_function: dummyHydrater,
+    logger: function(str, err) {
+      if(err) {
+        throw err;
+      }
+    }
   };
 
   var server = cluestrFileHydrater.createServer(config);

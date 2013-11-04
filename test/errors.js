@@ -15,7 +15,9 @@ var buggyHydrater = function() {
 
 describe('Errors', function() {
   var config = {
-    hydrater_function: buggyHydrater
+    hydrater_function: buggyHydrater,
+    logger: function() {// Will be pinged with error. We don't care.
+    }
   };
   var hydrationServer = cluestrFileHydrater.createServer(config);
 
