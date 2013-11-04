@@ -21,7 +21,12 @@ describe('/hydrate webhooks', function() {
   process.env.CLUESTR_SERVER = 'http://localhost';
 
   var config = {
-    hydrater_function: dummyHydrater
+    hydrater_function: dummyHydrater,
+    logger: function(str, err) {
+      if(err) {
+        throw err;
+      }
+    }
   };
 
   var hydrationServer = cluestrFileHydrater.createServer(config);
