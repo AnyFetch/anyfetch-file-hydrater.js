@@ -41,7 +41,7 @@ describe('Errors', function() {
   });
 
   it('should be handled gracefully with long_poll option', function(done) {
-    this.timeout(4000);
+    this.timeout(10000);
     
     request(hydrationServer).post('/hydrate')
       .send({
