@@ -11,15 +11,16 @@ var dummyHydrater = function(path, document, cb) {
   cb(null, document);
 };
 
-describe('POST /hydrate', function() {
-  var config = {
-    hydrater_function: dummyHydrater,
-    logger: function(str, err) {
-      if(err) {
-        throw err;
-      }
+var config = {
+  hydrater_function: dummyHydrater,
+  logger: function(str, err) {
+    if(err) {
+      throw err;
     }
-  };
+  }
+};
+
+describe('POST /hydrate', function() {
 
   var server = cluestrFileHydrater.createServer(config);
 
@@ -75,6 +76,27 @@ describe('POST /hydrate', function() {
       });
   });
 });
+
+
+describe('GET /status', function() {
+  var server = cluestrFileHydrater.createServer(config);
+
+  it('should reply with current status', function(done) {
+    request(server).get('/status')
+      .expect(200)
+      .end(function(err, res) {
+        if(err) {
+          throw err;
+        }
+
+        res.body.should.have.property('status', 'ok');
+        res.body.should.have.property('queued_items', 0);
+
+        done();
+      });
+  });
+});
+
 
 describe('createServer()', function() {
   it('should refuse to create without hydrater_function', function(done) {
