@@ -22,7 +22,7 @@ describe('Errors', function() {
   var hydrationServer = cluestrFileHydrater.createServer(config);
 
   it('should be handled gracefully', function(done) {
-    this.timeout(4000);
+    this.timeout(10000);
     request(hydrationServer).post('/hydrate')
       .send({
         file_path: 'http://cluestr.com/file',

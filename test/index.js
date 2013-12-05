@@ -58,7 +58,7 @@ describe('POST /hydrate', function() {
   });
 
   it('should allow for long polling', function(done) {
-    this.timeout(4000);
+    this.timeout(10000);
     
     request(server)
       .post('/hydrate')

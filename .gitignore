@@ -1,5 +1,6 @@
 # Projects files
 keys.sh
+coverage/*
 
 # OS Artifacts
 *.DS_Store
