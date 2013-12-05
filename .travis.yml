@@ -3,7 +3,7 @@ node_js:
   - '0.10'
   - '0.11'
 before_script:
-  - sudo npm install -g istanbul
+  - npm install -g istanbul
   - npm install coveralls
   - npm install mocha-lcov-reporter
 script:
