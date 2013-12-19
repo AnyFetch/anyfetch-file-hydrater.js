@@ -1,5 +1,6 @@
 {
   "name": "cluestr-file-hydrater",
+  "description": "Create file hydrater for Cluestr.",
   "version": "0.1.8",
   "author": "Matthieu Bacconnier <matthieu.bacconnier@papiel.fr>",
   "scripts": {
@@ -25,7 +26,7 @@
     "should": "2.1.x",
     "supertest": "0.8.x"
   },
-  "licence": "Copyright Papiel",
+  "licence": "MIT License",
   "engines": {
     "node": ">=0.10"
   }
