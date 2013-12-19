@@ -6,7 +6,7 @@ var restify = require('restify');
 var fs = require('fs');
 
 
-var cluestrFileHydrater = require('../lib/cluestr-file-hydrater/index.js');
+var cluestrFileHydrater = require('../lib/');
 
 var dummyHydrater = function(path, document, cb) {
   document.metadatas.path = path;

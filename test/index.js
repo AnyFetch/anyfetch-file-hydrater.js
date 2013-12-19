@@ -3,7 +3,7 @@
 require('should');
 var request = require('supertest');
 
-var cluestrFileHydrater = require('../lib/cluestr-file-hydrater/index.js');
+var cluestrFileHydrater = require('../lib/');
 
 
 var dummyHydrater = function(path, document, cb) {
