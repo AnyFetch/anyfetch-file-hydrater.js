@@ -18,7 +18,7 @@ var dummyHydrater = function(path, document, cb) {
 describe('/hydrate webhooks', function() {
   // Patch AnyFetch URL
   // Avoid uselessly pinging anyfetch.com with invalid requests
-  process.env.CLUESTR_SERVER = 'http://localhost';
+  process.env.ANYFETCH_API_URL = 'http://localhost';
 
   var config = {
     hydrater_function: dummyHydrater,
