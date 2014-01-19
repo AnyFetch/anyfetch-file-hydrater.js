@@ -4,7 +4,7 @@ require('should');
 var request = require('supertest');
 
 
-var cluestrFileHydrater = require('../lib/');
+var anyfetchFileHydrater = require('../lib/');
 
 var buggyHydrater = function() {
   // Fake async stuff
@@ -19,14 +19,14 @@ describe('Errors', function() {
     logger: function() {// Will be pinged with error. We don't care.
     }
   };
-  var hydrationServer = cluestrFileHydrater.createServer(config);
+  var hydrationServer = anyfetchFileHydrater.createServer(config);
 
   it('should be handled gracefully', function(done) {
     this.timeout(10000);
     request(hydrationServer).post('/hydrate')
       .send({
-        file_path: 'http://cluestr.com/file',
-        callback: 'http://cluestr.com/result',
+        file_path: 'http://anyfetch.com/file',
+        callback: 'http://anyfetch.com/result',
         metadatas: {
           "foo": "bar"
         }
@@ -45,8 +45,8 @@ describe('Errors', function() {
     
     request(hydrationServer).post('/hydrate')
       .send({
-        file_path: 'http://cluestr.com/file',
-        callback: 'http://cluestr.com/result',
+        file_path: 'http://anyfetch.com/file',
+        callback: 'http://anyfetch.com/result',
         metadatas: {
           "foo": "bar"
         },

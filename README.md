@@ -1,7 +1,7 @@
-Cluestr file hydrater
+AnyFetch file hydrater
 ====================
 
-Base library for file hydration on http://cluestr.com.
+Base library for file hydration on http://anyfetch.com.
 
 This library takes a path and metadatas, and returns more metadatas.
 
@@ -11,7 +11,7 @@ How to use?
 ```javascript
 'use strict';
 
-var cluestrFileHydrater = require('cluestr-file-hydrater');
+var anyfetchFileHydrater = require('anyfetch-file-hydrater');
 
 /**
  * Hydration function, to add metadatas to the document
@@ -30,12 +30,12 @@ var config = {
   'hydrater_function': myHydrationFunction
 };
 
-var hydrationServer = cluestrFileHydrater.createServer(config);
+var hydrationServer = anyfetchFileHydrater.createServer(config);
 hydrationServer.listen(8000);
 ```
 
 Now you're all done! Your server is running on port 8000.
-Access `/hydrate` with a standard Cluestr POST request, and start hydrating your file.
+Access `/hydrate` with a standard AnyFetch POST request, and start hydrating your file.
 
 ```
 POST <your_url>/hydrate
