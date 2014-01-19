@@ -3,7 +3,7 @@ AnyFetch file hydrater
 
 Base library for file hydration on http://anyfetch.com.
 
-This library takes a path and metadatas, and returns more metadatas.
+Using this library requires a single function which takes a file path and metadatas, and returns more metadatas.
 
 How to use?
 -------------------
