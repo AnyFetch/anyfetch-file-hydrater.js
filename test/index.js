@@ -3,7 +3,7 @@
 require('should');
 var request = require('supertest');
 
-var cluestrFileHydrater = require('../lib/');
+var anyfetchFileHydrater = require('../lib/');
 
 
 var dummyHydrater = function(path, document, cb) {
@@ -22,13 +22,13 @@ var config = {
 
 describe('POST /hydrate', function() {
 
-  var server = cluestrFileHydrater.createServer(config);
+  var server = anyfetchFileHydrater.createServer(config);
 
   it('should refuse request without file_path', function(done) {
     request(server).post('/hydrate')
       .send({
         'metadatas': {},
-        'callback': 'http://cluestr.com/callback'
+        'callback': 'http://anyfetch.com/callback'
       })
       .expect(405)
       .end(done);
@@ -38,7 +38,7 @@ describe('POST /hydrate', function() {
     request(server).post('/hydrate')
       .send({
         'metadatas': {},
-        'file_path': 'http://cluestr.com/file'
+        'file_path': 'http://anyfetch.com/file'
       })
       .expect(405)
       .end(done);
@@ -50,8 +50,8 @@ describe('POST /hydrate', function() {
       .post('/hydrate')
       .send({
         'metadatas': {},
-        'file_path': 'http://cluestr.com/file',
-        'callback': 'http://cluestr.com/callback'
+        'file_path': 'http://anyfetch.com/file',
+        'callback': 'http://anyfetch.com/callback'
       })
       .expect(202)
       .end(done);
@@ -64,8 +64,8 @@ describe('POST /hydrate', function() {
       .post('/hydrate')
       .send({
         'metadatas': {},
-        'file_path': 'http://cluestr.com/file',
-        'callback': 'http://cluestr.com/callback',
+        'file_path': 'http://anyfetch.com/file',
+        'callback': 'http://anyfetch.com/callback',
         'long_poll': true
       })
       .expect(200)
@@ -81,7 +81,7 @@ describe('POST /hydrate', function() {
 
 
 describe('GET /status', function() {
-  var server = cluestrFileHydrater.createServer(config);
+  var server = anyfetchFileHydrater.createServer(config);
 
   it('should reply with current status', function(done) {
     request(server).get('/status')
@@ -103,7 +103,7 @@ describe('GET /status', function() {
 describe('createServer()', function() {
   it('should refuse to create without hydrater_function', function(done) {
     try {
-      cluestrFileHydrater.createServer({});
+      anyfetchFileHydrater.createServer({});
     } catch(e) {
       e.toString().should.include('hydrater_function');
       return done();

@@ -6,7 +6,7 @@ var restify = require('restify');
 var fs = require('fs');
 
 
-var cluestrFileHydrater = require('../lib/');
+var anyfetchFileHydrater = require('../lib/');
 
 var dummyHydrater = function(path, document, cb) {
   document.metadatas.path = path;
@@ -16,9 +16,9 @@ var dummyHydrater = function(path, document, cb) {
 };
 
 describe('/hydrate webhooks', function() {
-  // Patch Cluestr URL
-  // Avoid uselessly pinging cluestr.com with invalid requests
-  process.env.CLUESTR_SERVER = 'http://localhost';
+  // Patch AnyFetch URL
+  // Avoid uselessly pinging anyfetch.com with invalid requests
+  process.env.ANYFETCH_API_URL = 'http://localhost';
 
   var config = {
     hydrater_function: dummyHydrater,
@@ -29,7 +29,7 @@ describe('/hydrate webhooks', function() {
     }
   };
 
-  var hydrationServer = cluestrFileHydrater.createServer(config);
+  var hydrationServer = anyfetchFileHydrater.createServer(config);
 
   it('should be pinged with hydrater result', function(done) {
     // Create a fake HTTP server to send a file and test results

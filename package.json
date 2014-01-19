@@ -1,6 +1,6 @@
 {
-  "name": "cluestr-file-hydrater",
-  "description": "Create file hydrater for Cluestr.",
+  "name": "anyfetch-file-hydrater",
+  "description": "Create file hydrater for AnyFetch.",
   "version": "0.1.9",
   "author": "Matthieu Bacconnier <matthieu.bacconnier@papiel.fr>",
   "scripts": {
@@ -10,10 +10,10 @@
   "main": "./lib",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Papiel/cluestr-file-hydrater"
+    "url": "https://github.com/Papiel/anyfetch-file-hydrater"
   },
   "keywords": [
-    "cluestr",
+    "anyfetch",
     "hydrater"
   ],
   "dependencies": {
