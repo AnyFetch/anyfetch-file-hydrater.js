@@ -8,6 +8,7 @@ var anyfetchFileHydrater = require('../lib/');
 
 var dummyHydrater = function(path, document, cb) {
   document.metadatas.hydrated = true;
+
   cb(null, document);
 };
 

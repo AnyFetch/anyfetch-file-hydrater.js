@@ -9,6 +9,10 @@ var fs = require('fs');
 var anyfetchFileHydrater = require('../lib/');
 
 var dummyHydrater = function(path, document, cb) {
+  if(document.replace) {
+    return cb();
+  }
+
   document.metadatas.path = path;
   document.metadatas.text = fs.readFileSync(path).toString();
 
