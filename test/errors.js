@@ -20,12 +20,15 @@ describe('Errors', function() {
     }
   };
   var hydrationServer = anyfetchFileHydrater.createServer(config);
+  after(function() {
+    hydrationServer.close();
+  });
 
   it('should be handled gracefully', function(done) {
     this.timeout(10000);
     request(hydrationServer).post('/hydrate')
       .send({
-        file_path: 'http://anyfetch.com/file',
+        file_path: 'http://anyfetch.com',
         callback: 'http://anyfetch.com/result',
         metadatas: {
           "foo": "bar"
@@ -45,7 +48,7 @@ describe('Errors', function() {
     
     request(hydrationServer).post('/hydrate')
       .send({
-        file_path: 'http://anyfetch.com/file',
+        file_path: 'http://anyfetch.com',
         callback: 'http://anyfetch.com/result',
         metadatas: {
           "foo": "bar"
@@ -59,6 +62,7 @@ describe('Errors', function() {
         }
 
         res.body.should.have.property('message').and.include('ERR');
+        res.body.should.have.property('message').and.include('buggy');
         done();
       });
   });

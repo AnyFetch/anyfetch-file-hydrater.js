@@ -50,7 +50,7 @@ describe('POST /hydrate', function() {
       .post('/hydrate')
       .send({
         'metadatas': {},
-        'file_path': 'http://anyfetch.com/file',
+        'file_path': 'http://anyfetch.com/',
         'callback': 'http://anyfetch.com/callback'
       })
       .expect(202)
@@ -64,7 +64,7 @@ describe('POST /hydrate', function() {
       .post('/hydrate')
       .send({
         'metadatas': {},
-        'file_path': 'http://anyfetch.com/file',
+        'file_path': 'http://anyfetch.com/',
         'callback': 'http://anyfetch.com/callback',
         'long_poll': true
       })
