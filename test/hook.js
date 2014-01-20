@@ -63,6 +63,9 @@ describe('/hydrate webhooks', function() {
       }
     });
     fileServer.listen(1337);
+    after(function() {
+      fileServer.close();
+    });
 
 
     request(hydrationServer).post('/hydrate')

@@ -87,6 +87,7 @@ describe('Errors', function() {
 
         res.body.should.have.property('message').and.include('ERR');
         res.body.should.have.property('message').and.include('Invalid statusCode');
+        res.body.should.have.property('message').and.include('404');
         done();
       });
   });
