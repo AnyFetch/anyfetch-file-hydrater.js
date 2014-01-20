@@ -24,7 +24,7 @@ describe('Errors', function() {
     hydrationServer.close();
   });
 
-  it('should be handled gracefully', function(done) {
+  it('should be handled gracefully while hydrating', function(done) {
     this.timeout(10000);
     request(hydrationServer).post('/hydrate')
       .send({
@@ -43,7 +43,7 @@ describe('Errors', function() {
     };
   });
 
-  it('should be handled gracefully with long_poll option', function(done) {
+  it('should be handled gracefully with long_poll option while hydrating', function(done) {
     this.timeout(10000);
     
     request(hydrationServer).post('/hydrate')
@@ -63,6 +63,30 @@ describe('Errors', function() {
 
         res.body.should.have.property('message').and.include('ERR');
         res.body.should.have.property('message').and.include('buggy');
+        done();
+      });
+  });
+
+  it('should be handled gracefully if file does not exists', function(done) {
+    this.timeout(10000);
+    
+    request(hydrationServer).post('/hydrate')
+      .send({
+        file_path: 'http://anyfetch.com/NOPE',
+        callback: 'http://anyfetch.com/result',
+        metadatas: {
+          "foo": "bar"
+        },
+        'long_poll': true
+      })
+      .expect(400)
+      .end(function(err, res) {
+        if(err) {
+          throw err;
+        }
+
+        res.body.should.have.property('message').and.include('ERR');
+        res.body.should.have.property('message').and.include('Invalid statusCode');
         done();
       });
   });
