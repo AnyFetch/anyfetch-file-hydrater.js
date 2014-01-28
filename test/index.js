@@ -45,6 +45,17 @@ describe('POST /hydrate', function() {
       .end(done);
   });
 
+  it('should accept request without callback when long_polling', function(done) {
+    request(server).post('/hydrate')
+      .send({
+        'metadatas': {},
+        'file_path': 'http://anyfetch.com',
+        'long_poll': true
+      })
+      .expect(200)
+      .end(done);
+  });
+
   it('should immediately return 202', function(done) {
     this.timeout(300);
     request(server)
