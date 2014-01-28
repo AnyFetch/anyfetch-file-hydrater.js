@@ -76,8 +76,10 @@ describe('/hydrate webhooks', function() {
       .send({
         file_path: 'http://127.0.0.1:1337/file',
         callback: 'http://127.0.0.1:1337/result',
-        metadatas: {
-          "foo": "bar"
+        document: {
+          metadatas: {
+            "foo": "bar"
+          }
         }
       })
       .expect(204)

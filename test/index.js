@@ -28,8 +28,10 @@ describe('POST /hydrate', function() {
   it('should refuse request without file_path', function(done) {
     request(server).post('/hydrate')
       .send({
-        'metadatas': {},
-        'callback': 'http://anyfetch.com/callback'
+        'callback': 'http://anyfetch.com/callback',
+        'document': {
+          'metadatas': {},
+        }
       })
       .expect(405)
       .end(done);
@@ -38,8 +40,10 @@ describe('POST /hydrate', function() {
   it('should refuse request without callback', function(done) {
     request(server).post('/hydrate')
       .send({
-        'metadatas': {},
-        'file_path': 'http://anyfetch.com/file'
+        'file_path': 'http://anyfetch.com/file',
+        'document': {
+          'metadatas': {},
+        }
       })
       .expect(405)
       .end(done);
@@ -48,9 +52,11 @@ describe('POST /hydrate', function() {
   it('should accept request without callback when long_polling', function(done) {
     request(server).post('/hydrate')
       .send({
-        'metadatas': {},
         'file_path': 'http://anyfetch.com',
-        'long_poll': true
+        'long_poll': true,
+        'document': {
+          'metadatas': {},
+        }
       })
       .expect(200)
       .end(done);
@@ -61,9 +67,11 @@ describe('POST /hydrate', function() {
     request(server)
       .post('/hydrate')
       .send({
-        'metadatas': {},
         'file_path': 'http://anyfetch.com/',
-        'callback': 'http://anyfetch.com/callback'
+        'callback': 'http://anyfetch.com/callback',
+        'document': {
+          'metadatas': {},
+        }
       })
       .expect(202)
       .end(done);
@@ -75,10 +83,12 @@ describe('POST /hydrate', function() {
     request(server)
       .post('/hydrate')
       .send({
-        'metadatas': {},
         'file_path': 'http://anyfetch.com/',
         'callback': 'http://anyfetch.com/callback',
-        'long_poll': true
+        'long_poll': true,
+        'document': {
+          'metadatas': {},
+        }
       })
       .expect(200)
       .end(function(err, res) {
