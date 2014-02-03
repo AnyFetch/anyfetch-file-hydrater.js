@@ -30,8 +30,10 @@ describe('Errors', function() {
       .send({
         file_path: 'http://anyfetch.com',
         callback: 'http://anyfetch.com/result',
-        metadatas: {
-          "foo": "bar"
+        document: {
+          metadatas: {
+            "foo": "bar"
+          }
         }
       })
       .expect(204)
@@ -50,8 +52,10 @@ describe('Errors', function() {
       .send({
         file_path: 'http://anyfetch.com',
         callback: 'http://anyfetch.com/result',
-        metadatas: {
-          "foo": "bar"
+        document: {
+          metadatas: {
+            "foo": "bar"
+          },
         },
         'long_poll': true
       })
@@ -74,8 +78,10 @@ describe('Errors', function() {
       .send({
         file_path: 'http://anyfetch.com/NOPE',
         callback: 'http://anyfetch.com/result',
-        metadatas: {
-          "foo": "bar"
+        document: {
+          metadatas: {
+            "foo": "bar"
+          },
         },
         'long_poll': true
       })

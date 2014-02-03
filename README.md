@@ -17,7 +17,7 @@ var anyfetchFileHydrater = require('anyfetch-file-hydrater');
  * Hydration function, to add metadatas to the document
  * 
  * @param{Object} filePath Path to the file to hydrate, downloaded for you on the filesystem
- * @param {Object} document Metadatas currently known (from previous hydraters, of from providers). Includes `binary_document_type`, `semantic_document_type` and `metadatas`.
+ * @param {Object} document Metadatas currently known (from previous hydraters, or from providers). Includes `document_type`, and `metadatas`.
  */
 var myHydrationFunction = function(filePath, document, cb) {
   // Do stuff with the file...
@@ -36,6 +36,8 @@ hydrationServer.listen(8000);
 
 Now you're all done! Your server is running on port 8000.
 Access `/hydrate` with a standard AnyFetch POST request, and start hydrating your file.
+
+> In some cases, you may want to override the lib and send the result yourself. To do so, you can use `cb.callbackUrl` to send datas back to the client, and then call `cb()` without any error or document to finalize hydration, clean the file and start another task.
 
 ```
 POST <your_url>/hydrate
