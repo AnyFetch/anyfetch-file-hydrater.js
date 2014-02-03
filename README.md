@@ -37,13 +37,14 @@ hydrationServer.listen(8000);
 Now you're all done! Your server is running on port 8000.
 Access `/hydrate` with a standard AnyFetch POST request, and start hydrating your file.
 
-> In some cases, you may want to override the lib and send the result yourself. To do so, you can use `cb.callbackUrl` to send datas back to the client, and then call `cb()` without any error or document to finalize hydration, clean the file and start another task.
-
 ```
 POST <your_url>/hydrate
   file_path: <url-file-to-hydrate>
   callback: <url-to-ping>
+  document: {base document}
 ```
+
+> In some cases, you may want to override the lib and send the result yourself. To do so, you can use `cb.callbackUrl` to send datas back to the client, and then call `cb()` without any error or document to finalize hydration, clean the file and start another task.
 
 ### Optional parameters
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
