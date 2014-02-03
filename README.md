@@ -17,7 +17,7 @@ var anyfetchFileHydrater = require('anyfetch-file-hydrater');
  * Hydration function, to add metadatas to the document
  * 
  * @param{Object} filePath Path to the file to hydrate, downloaded for you on the filesystem
- * @param {Object} document Metadatas currently known (from previous hydraters, of from providers). Includes `binary_document_type`, `semantic_document_type` and `metadatas`.
+ * @param {Object} document Metadatas currently known (from previous hydraters, or from providers). Includes `document_type`, and `metadatas`.
  */
 var myHydrationFunction = function(filePath, document, cb) {
   // Do stuff with the file...
