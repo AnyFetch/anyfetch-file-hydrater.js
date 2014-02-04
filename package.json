@@ -10,7 +10,7 @@
   "main": "./lib",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Papiel/anyfetch-file-hydrater"
+    "url": "https://github.com/Papiel/anyfetch-file-hydrater.js"
   },
   "keywords": [
     "anyfetch",
