@@ -1,5 +1,7 @@
 AnyFetch file hydrater
 ====================
+[![Build Status](https://travis-ci.org/Papiel/anyfetch-file-hydrater.js.png?branch=master)](https://travis-ci.org/Papiel/anyfetch-file-hydrater.js)[![Dependency Status](https://gemnasium.com/Papiel/anyfetch-file-hydrater.js.png)](https://gemnasium.com/Papiel/anyfetch-file-hydrater.js)
+[![NPM version](https://badge.fury.io/js/anyfetch-file-hydrater.png)](http://badge.fury.io/js/anyfetch-file-hydrater)
 
 Base library for file hydration on http://anyfetch.com.
 
