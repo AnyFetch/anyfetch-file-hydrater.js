@@ -34,9 +34,6 @@ describe('/hydrate webhooks', function() {
   };
 
   var hydrationServer = anyfetchFileHydrater.createServer(config);
-  after(function() {
-    hydrationServer.close();
-  });
 
   it('should be pinged with hydrater result', function(done) {
     // Create a fake HTTP server to send a file and test results
@@ -62,7 +59,7 @@ describe('/hydrate webhooks', function() {
 
         done();
       } catch(e) {
-        // We need a try catch cause mocha is try-catching on main event loop, and the server create a new stack. 
+        // We need a try catch cause mocha is try-catching on main event loop, and the server create a new stack.
         done(e);
       }
     });

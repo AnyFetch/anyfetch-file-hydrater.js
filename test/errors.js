@@ -20,9 +20,6 @@ describe('Errors', function() {
     }
   };
   var hydrationServer = anyfetchFileHydrater.createServer(config);
-  after(function() {
-    hydrationServer.close();
-  });
 
   it('should be handled gracefully while hydrating', function(done) {
     this.timeout(10000);
@@ -47,7 +44,7 @@ describe('Errors', function() {
 
   it('should be handled gracefully with long_poll option while hydrating', function(done) {
     this.timeout(10000);
-    
+
     request(hydrationServer).post('/hydrate')
       .send({
         file_path: 'http://anyfetch.com',
@@ -73,7 +70,7 @@ describe('Errors', function() {
 
   it('should be handled gracefully if file does not exists', function(done) {
     this.timeout(10000);
-    
+
     request(hydrationServer).post('/hydrate')
       .send({
         file_path: 'http://anyfetch.com/NOPE',
