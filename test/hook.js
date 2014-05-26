@@ -33,9 +33,6 @@ describe('/hydrate webhooks', function() {
   };
 
   var hydrationServer = anyfetchFileHydrater.createServer(config);
-  after(function() {
-    hydrationServer.close();
-  });
 
   it('should be pinged with hydrater result', function(done) {
     // Create a fake HTTP server to send a file and test results
