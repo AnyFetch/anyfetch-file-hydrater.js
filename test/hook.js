@@ -49,6 +49,7 @@ describe('/hydrate webhooks', function() {
     fileServer.patch('/result', function(req, res, next) {
       try {
         req.params.should.have.property('metadatas');
+        req.params.metadatas.should.not.have.property('foo');
         req.params.metadatas.should.have.property('path');
         req.params.metadatas.should.have.property('text', fs.readFileSync(__filename).toString());
         res.send(204);
