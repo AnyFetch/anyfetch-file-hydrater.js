@@ -8,15 +8,14 @@ var fs = require('fs');
 
 var anyfetchFileHydrater = require('../lib/');
 
-var dummyHydrater = function(path, document, cb) {
+var dummyHydrater = function(path, document, changes, cb) {
   if(document.replace) {
     return cb();
   }
+  changes.metadatas.path = path;
+  changes.metadatas.text = fs.readFileSync(path).toString();
 
-  document.metadatas.path = path;
-  document.metadatas.text = fs.readFileSync(path).toString();
-
-  cb(null, document);
+  cb(null, changes);
 };
 
 describe('/hydrate webhooks', function() {
@@ -53,7 +52,6 @@ describe('/hydrate webhooks', function() {
     fileServer.patch('/result', function(req, res, next) {
       try {
         req.params.should.have.property('metadatas');
-        req.params.metadatas.should.have.property('foo', 'bar');
         req.params.metadatas.should.have.property('path');
         req.params.metadatas.should.have.property('text', fs.readFileSync(__filename).toString());
         res.send(204);
@@ -62,7 +60,7 @@ describe('/hydrate webhooks', function() {
 
         done();
       } catch(e) {
-        // We need a try catch cause mocha is try-catching on main event loop, and the server create a new stack. 
+        // We need a try catch cause mocha is try-catching on main event loop, and the server create a new stack.
         done(e);
       }
     });

@@ -6,10 +6,10 @@ var request = require('supertest');
 var anyfetchFileHydrater = require('../lib/');
 
 
-var dummyHydrater = function(path, document, cb) {
-  document.metadatas.hydrated = true;
+var dummyHydrater = function(path, document, changes, cb) {
+  changes.metadatas.hydrated = true;
 
-  cb(null, document);
+  cb(null, changes);
 };
 
 var config = {
@@ -79,7 +79,7 @@ describe('POST /hydrate', function() {
 
   it('should allow for long polling', function(done) {
     this.timeout(10000);
-    
+
     request(server)
       .post('/hydrate')
       .send({
@@ -91,13 +91,10 @@ describe('POST /hydrate', function() {
         }
       })
       .expect(200)
-      .end(function(err, res) {
-        if(err) {
-          throw err;
-        }
+      .expect(function(res){
         res.body.should.have.property('metadatas').and.have.property('hydrated').and.equal(true);
-        done();
-      });
+      })
+      .end(done);
   });
 });
 
