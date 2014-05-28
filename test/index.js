@@ -2,7 +2,7 @@
 
 require('should');
 var request = require('supertest');
-
+var async = require('async');
 var anyfetchFileHydrater = require('../lib/');
 
 
@@ -129,5 +129,23 @@ describe('createServer()', function() {
     }
 
     done(new Error("Hydrater function was not asked"));
+  });
+});
+
+describe('hydrationError()', function() {
+  it('should send a custom error', function(done) {
+    async.waterfall([
+      function callError(cb){
+        cb(new anyfetchFileHydrater.hydrationError("test error"));
+      }
+    ],
+    function(err){
+      if(err.message === "test error") {
+        done();
+      }
+      else {
+        done(err);
+      }
+    });
   });
 });
