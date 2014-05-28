@@ -54,3 +54,16 @@ POST <your_url>/hydrate
 
 * `concurrency`, max number of simultaneous calls to your hydrater function (default: 1)
 * `logger` function to use for logging error and success. Will get notified with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument.and not thrown).
+
+Errors
+------
+You may use `require('anyfetch-file-hydrater').hydrationError` as a special error to inform the hydration was unable to complete, and should not be tried again:
+
+```js
+var myHydrationFunction = function(filePath, document, cb) {
+  // Do stuff with the file...
+  cb(new require('anyfetch-file-hydrater').hydrationError("Corrupted file"));
+};
+```
+
+For other (transient) errors, use standard `Error` objects.
