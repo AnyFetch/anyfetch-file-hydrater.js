@@ -7,7 +7,7 @@ var anyfetchFileHydrater = require('../lib/');
 
 
 var dummyHydrater = function(path, document, changes, cb) {
-  changes.metadatas.hydrated = true;
+  changes.metadata.hydrated = true;
 
   cb(null, changes);
 };
@@ -30,7 +30,7 @@ describe('POST /hydrate', function() {
       .send({
         'callback': 'http://anyfetch.com/callback',
         'document': {
-          'metadatas': {},
+          'metadata': {},
         }
       })
       .expect(405)
@@ -42,7 +42,7 @@ describe('POST /hydrate', function() {
       .send({
         'file_path': 'http://anyfetch.com/file',
         'document': {
-          'metadatas': {},
+          'metadata': {},
         }
       })
       .expect(405)
@@ -55,7 +55,7 @@ describe('POST /hydrate', function() {
         'file_path': 'http://anyfetch.com',
         'long_poll': true,
         'document': {
-          'metadatas': {},
+          'metadata': {},
         }
       })
       .expect(200)
@@ -70,7 +70,7 @@ describe('POST /hydrate', function() {
         'file_path': 'http://anyfetch.com/',
         'callback': 'http://anyfetch.com/callback',
         'document': {
-          'metadatas': {},
+          'metadata': {},
         }
       })
       .expect(202)
@@ -87,12 +87,12 @@ describe('POST /hydrate', function() {
         'callback': 'http://anyfetch.com/callback',
         'long_poll': true,
         'document': {
-          'metadatas': {},
+          'metadata': {},
         }
       })
       .expect(200)
       .expect(function(res){
-        res.body.should.have.property('metadatas').and.have.property('hydrated').and.equal(true);
+        res.body.should.have.property('metadata').and.have.property('hydrated').and.equal(true);
       })
       .end(done);
   });

@@ -12,8 +12,8 @@ var dummyHydrater = function(path, document, changes, cb) {
   if(document.replace) {
     return cb();
   }
-  changes.metadatas.path = path;
-  changes.metadatas.text = fs.readFileSync(path).toString();
+  changes.metadata.path = path;
+  changes.metadata.text = fs.readFileSync(path).toString();
 
   cb(null, changes);
 };
@@ -48,10 +48,10 @@ describe('/hydrate webhooks', function() {
 
     fileServer.patch('/result', function(req, res, next) {
       try {
-        req.params.should.have.property('metadatas');
-        req.params.metadatas.should.not.have.property('foo');
-        req.params.metadatas.should.have.property('path');
-        req.params.metadatas.should.have.property('text', fs.readFileSync(__filename).toString());
+        req.params.should.have.property('metadata');
+        req.params.metadata.should.not.have.property('foo');
+        req.params.metadata.should.have.property('path');
+        req.params.metadata.should.have.property('text', fs.readFileSync(__filename).toString());
         res.send(204);
 
         next();
@@ -73,7 +73,7 @@ describe('/hydrate webhooks', function() {
         file_path: 'http://127.0.0.1:1337/file',
         callback: 'http://127.0.0.1:1337/result',
         document: {
-          metadatas: {
+          metadata: {
             "foo": "bar"
           }
         }
