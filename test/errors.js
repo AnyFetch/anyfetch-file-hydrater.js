@@ -28,7 +28,7 @@ describe('Errors', function() {
         file_path: 'http://anyfetch.com',
         callback: 'http://anyfetch.com/result',
         document: {
-          metadatas: {
+          metadata: {
             "foo": "bar"
           }
         }
@@ -50,7 +50,7 @@ describe('Errors', function() {
         file_path: 'http://anyfetch.com',
         callback: 'http://anyfetch.com/result',
         document: {
-          metadatas: {
+          metadata: {
             "foo": "bar"
           },
         },
@@ -76,7 +76,7 @@ describe('Errors', function() {
         file_path: 'http://anyfetch.com/NOPE',
         callback: 'http://anyfetch.com/result',
         document: {
-          metadatas: {
+          metadata: {
             "foo": "bar"
           },
         },
@@ -136,7 +136,7 @@ describe('hydrationErrors', function() {
         file_path: 'http://anyfetch.com/',
         callback: 'http://127.0.0.1:4242/result',
         document: {
-          metadatas: {
+          metadata: {
             "foo": "bar"
           }
         }
