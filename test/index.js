@@ -63,7 +63,7 @@ describe('POST /hydrate', function() {
   });
 
   it('should immediately return 202', function(done) {
-    this.timeout(300);
+    this.timeout(30000);
     request(server)
       .post('/hydrate')
       .send({
