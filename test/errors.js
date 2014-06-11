@@ -84,6 +84,7 @@ describe('Errors', function() {
       })
       .expect(400)
       .end(function(err, res) {
+        console.log(res.body);
         if(err) {
           throw err;
         }
