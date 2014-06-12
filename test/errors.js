@@ -120,13 +120,15 @@ describe('hydrationErrors', function() {
 
     fakeApi.patch('/result', function(req, res, next) {
       //should
+      res.send(204);
+      next();
+
       if(req.params.hydration_errored && req.params.hydration_error === "hydrater errored") {
         done();
       }
       else {
         done(new Error("Invalid call"));
       }
-      next();
       fakeApi.close();
     });
     fakeApi.listen(4242);
