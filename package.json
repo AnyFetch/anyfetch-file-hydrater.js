@@ -18,7 +18,6 @@
   ],
   "dependencies": {
     "async": "0.9.x",
-    "request": "2.x.x",
     "restify": "2.8.x",
     "supertest": "^0.13.0"
   },
