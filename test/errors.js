@@ -73,8 +73,8 @@ describe('Errors', function() {
 
     request(hydrationServer).post('/hydrate')
       .send({
-        file_path: 'http://anyfetch.com/NOPE',
-        callback: 'http://anyfetch.com/result',
+        file_path: 'http://anyfetch.com/NOPE?some_query',
+        callback: 'http://anyfetch.com/result?some_query',
         document: {
           metadata: {
             "foo": "bar"
