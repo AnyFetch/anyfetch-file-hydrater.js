@@ -6,27 +6,33 @@ AnyFetch file hydrater
 
 Base library for file hydration on http://anyfetch.com.
 
-Using this library requires a single function which takes a file path and metadatas, and returns more metadatas.
+This library allows you to create a hydrater server from a single function. Taking a file path and initial data, it should return improved or augmented data.
 
-How to use?
--------------------
+Read first
+----------
+To better understand the role of "hydraters", read the [dedicated documentation page](http://developers.anyfetch.com/guides/using/hydrater.html).
 
-```javascript
+Usage
+-----
+
+```js
 'use strict';
 
 var anyfetchFileHydrater = require('anyfetch-file-hydrater');
 
 /**
- * Hydration function, to add metadatas to the document
- * 
- * @param{Object} filePath Path to the file to hydrate, downloaded for you on the filesystem
- * @param {Object} document Metadatas currently known (from previous hydraters, or from providers). Includes `document_type`, and `metadatas`.
+ * Hydration function, to add metadata to the document
+ *
+ * @param {String} filePath Path to the file from which hydrate, downloaded for you on the filesystem
+ * @param {Object} document Data currently known (from previous hydraters, or from providers). Always includes `document_type`, `metadata`, `data` and `actions` keys.
+ * @param {Object} changes Convenience object provided with empty keys `document_type`, `metadata`, `data` and `actions`. Add your changes in there.
+ * @param {Function} cb(err, changes) Call this with an error if any, or pass your changes as second parameter.
  */
-var myHydrationFunction = function(filePath, document, cb) {
-  // Do stuff with the file...
-  // Improve document...
+var myHydrationFunction = function(path, document, changes, cb)
+  // Extract interesting stuff from the file...
+  // Improve the document...
 
-  cb(err, document);
+  cb(err, changes);
 };
 
 var config = {
@@ -37,23 +43,25 @@ var hydrationServer = anyfetchFileHydrater.createServer(config);
 hydrationServer.listen(8000);
 ```
 
-Now you're all done! Your server is running on port 8000.
-Access `/hydrate` with a standard AnyFetch POST request, and start hydrating your file.
+You're all set! Your server is running on port 8000.
+Access `/hydrate` with a standard AnyFetch `POST` request to start hydrating your file.
 
 ```
-POST <your_url>/hydrate
-  file_path: <url-file-to-hydrate>
-  callback: <url-to-ping>
-  document: {base document}
+POST <your_hydrater_server_url>/hydrate
+  {
+    file_path: <url-file-to-hydrate>
+    callback: <url-to-ping>
+    document: {base document}
+  }
 ```
 
-> In some cases, you may want to override the lib and send the result yourself. To do so, you can use `cb.callbackUrl` to send datas back to the client, and then call `cb()` without any error or document to finalize hydration, clean the file and start another task.
+> In some cases, you may want to bypass the lib and send the result yourself. The property `cb.callbackUrl` tells you where to send the data back to the client. After having sent the data, call `cb()` *without any error or document*. This will finalize hydration, clean the file and start the next task.
 
 ### Optional parameters
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
 
-* `concurrency`, max number of simultaneous calls to your hydrater function (default: 1)
-* `logger` function to use for logging error and success. Will get notified with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument.and not thrown).
+* `concurrency`: max number of simultaneous calls to your hydrater function (default: 1)
+* `logger`: function to use for logging error and success. It will get called with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument).
 
 Errors
 ------
@@ -62,7 +70,7 @@ You may use `require('anyfetch-file-hydrater').hydrationError` as a special erro
 ```js
 var myHydrationFunction = function(filePath, document, cb) {
   // Do stuff with the file...
-  cb(new require('anyfetch-file-hydrater').hydrationError("Corrupted file"));
+  cb(new anyfetchFileHydrater.hydrationError("Corrupted file"));
 };
 ```
 
