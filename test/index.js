@@ -33,7 +33,7 @@ describe('POST /hydrate', function() {
           'metadata': {},
         }
       })
-      .expect(405)
+      .expect(409)
       .end(done);
   });
 
@@ -45,7 +45,7 @@ describe('POST /hydrate', function() {
           'metadata': {},
         }
       })
-      .expect(405)
+      .expect(409)
       .end(done);
   });
 

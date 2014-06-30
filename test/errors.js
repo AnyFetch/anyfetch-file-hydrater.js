@@ -57,15 +57,10 @@ describe('Errors', function() {
         'long_poll': true
       })
       .expect(400)
-      .end(function(err, res) {
-        if(err) {
-          throw err;
-        }
-
-        res.body.should.have.property('message').and.include('ERR');
-        res.body.should.have.property('message').and.include('buggy');
-        done();
-      });
+      .expect(/err/i)
+      .expect(/buggy/i)
+      .expect(400)
+      .end(done);
   });
 
   it('should be handled gracefully if file does not exists', function(done) {
@@ -83,16 +78,10 @@ describe('Errors', function() {
         'long_poll': true
       })
       .expect(400)
-      .end(function(err, res) {
-        if(err) {
-          throw err;
-        }
-
-        res.body.should.have.property('message').and.include('ERR');
-        res.body.should.have.property('message').and.include('Invalid statusCode');
-        res.body.should.have.property('message').and.include('404');
-        done();
-      });
+      .expect(/err/i)
+      .expect(/downloading file/i)
+      .expect(/404/i)
+      .end(done);
   });
 });
 
