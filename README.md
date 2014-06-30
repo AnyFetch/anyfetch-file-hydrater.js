@@ -25,14 +25,14 @@ var anyfetchFileHydrater = require('anyfetch-file-hydrater');
  *
  * @param {String} filePath Path to the file from which hydrate, downloaded for you on the filesystem
  * @param {Object} document Data currently known (from previous hydraters, or from providers). Always includes `document_type`, `metadata`, `data` and `actions` keys.
- * @param {Object} changes Changes to register. Always includes `document_type`, `metadata`, `data` and `actions` keys.
- * @param {Function} cb(err, document) Call this with an error if any, or your changes as second parameter once hydration has completed.
+ * @param {Object} changes Convenience object provided with empty keys `document_type`, `metadata`, `data` and `actions`. Add your changes in there.
+ * @param {Function} cb(err, changes) Call this with an error if any, or pass your changes as second parameter.
  */
 var myHydrationFunction = function(path, document, changes, cb)
   // Extract interesting stuff from the file...
   // Improve the document...
 
-  cb(err, document);
+  cb(err, changes);
 };
 
 var config = {
@@ -48,12 +48,14 @@ Access `/hydrate` with a standard AnyFetch `POST` request to start hydrating you
 
 ```
 POST <your_hydrater_server_url>/hydrate
+  {
     file_path: <url-file-to-hydrate>
     callback: <url-to-ping>
     document: {base document}
+  }
 ```
 
-> In some cases, you may want to bypass the lib and send the result yourself. To do so, you can use `cb.callbackUrl` to send data back to the client, and then call `cb()` *without any error or document*. This will finalize hydration, clean the file and start the next task.
+> In some cases, you may want to bypass the lib and send the result yourself. The property `cb.callbackUrl` tells you where to send the data back to the client. After having sent the data, call `cb()` *without any error or document*. This will finalize hydration, clean the file and start the next task.
 
 ### Optional parameters
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
