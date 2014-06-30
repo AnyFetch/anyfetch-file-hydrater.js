@@ -6,7 +6,7 @@ AnyFetch file hydrater
 
 Base library for file hydration on http://anyfetch.com.
 
-Using this library requires a single function which takes a file path and metadatas, and returns more metadatas.
+Using this library requires a single function which takes a file path and initial data, and returns more data.
 
 How to use?
 -------------------
@@ -17,12 +17,14 @@ How to use?
 var anyfetchFileHydrater = require('anyfetch-file-hydrater');
 
 /**
- * Hydration function, to add metadatas to the document
+ * Hydration function, to add metadata to the document
  * 
- * @param{Object} filePath Path to the file to hydrate, downloaded for you on the filesystem
- * @param {Object} document Metadatas currently known (from previous hydraters, or from providers). Includes `document_type`, and `metadatas`.
+ * @param {String} filePath Path to the file to hydrate, downloaded for you on the filesystem
+ * @param {Object} document Data currently known (from previous hydraters, or from providers). Always includes `document_type`, `metadata`, `data` and `actions` keys.
+ * @param {Object} changes Changes to register. Always includes `document_type`, `metadata`, `data` and `actions` keys.
+ * @param {Function} Call this wuth an error if any, of your changes as second parameter once hydration has completed.
  */
-var myHydrationFunction = function(filePath, document, cb) {
+var myHydrationFunction = function(path, document, changes, cb)
   // Do stuff with the file...
   // Improve document...
 
@@ -53,7 +55,7 @@ POST <your_url>/hydrate
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
 
 * `concurrency`, max number of simultaneous calls to your hydrater function (default: 1)
-* `logger` function to use for logging error and success. Will get notified with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument.and not thrown).
+* `logger` function to use for logging error and success. Will get notified with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument).
 
 Errors
 ------
