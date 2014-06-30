@@ -6,27 +6,31 @@ AnyFetch file hydrater
 
 Base library for file hydration on http://anyfetch.com.
 
-Using this library requires a single function which takes a file path and initial data, and returns more data.
+This library allows you to create a hydrater server from a single function. Taking a file path and initial data, it should return improved or augmented data.
 
-How to use?
--------------------
+Read first
+----------
+To better understand the role of "hydraters", read the [dedicated documentation page](http://developers.anyfetch.com/guides/using/hydrater.html).
 
-```javascript
+Usage
+-----
+
+```js
 'use strict';
 
 var anyfetchFileHydrater = require('anyfetch-file-hydrater');
 
 /**
  * Hydration function, to add metadata to the document
- * 
- * @param {String} filePath Path to the file to hydrate, downloaded for you on the filesystem
+ *
+ * @param {String} filePath Path to the file from which hydrate, downloaded for you on the filesystem
  * @param {Object} document Data currently known (from previous hydraters, or from providers). Always includes `document_type`, `metadata`, `data` and `actions` keys.
  * @param {Object} changes Changes to register. Always includes `document_type`, `metadata`, `data` and `actions` keys.
- * @param {Function} Call this wuth an error if any, of your changes as second parameter once hydration has completed.
+ * @param {Function} cb(err, document) Call this with an error if any, or your changes as second parameter once hydration has completed.
  */
 var myHydrationFunction = function(path, document, changes, cb)
-  // Do stuff with the file...
-  // Improve document...
+  // Extract interesting stuff from the file...
+  // Improve the document...
 
   cb(err, document);
 };
@@ -39,23 +43,23 @@ var hydrationServer = anyfetchFileHydrater.createServer(config);
 hydrationServer.listen(8000);
 ```
 
-Now you're all done! Your server is running on port 8000.
-Access `/hydrate` with a standard AnyFetch POST request, and start hydrating your file.
+You're all set! Your server is running on port 8000.
+Access `/hydrate` with a standard AnyFetch `POST` request to start hydrating your file.
 
 ```
-POST <your_url>/hydrate
-  file_path: <url-file-to-hydrate>
-  callback: <url-to-ping>
-  document: {base document}
+POST <your_hydrater_server_url>/hydrate
+    file_path: <url-file-to-hydrate>
+    callback: <url-to-ping>
+    document: {base document}
 ```
 
-> In some cases, you may want to override the lib and send the result yourself. To do so, you can use `cb.callbackUrl` to send datas back to the client, and then call `cb()` without any error or document to finalize hydration, clean the file and start another task.
+> In some cases, you may want to bypass the lib and send the result yourself. To do so, you can use `cb.callbackUrl` to send data back to the client, and then call `cb()` *without any error or document*. This will finalize hydration, clean the file and start the next task.
 
 ### Optional parameters
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
 
-* `concurrency`, max number of simultaneous calls to your hydrater function (default: 1)
-* `logger` function to use for logging error and success. Will get notified with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument).
+* `concurrency`: max number of simultaneous calls to your hydrater function (default: 1)
+* `logger`: function to use for logging error and success. It will get called with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument).
 
 Errors
 ------
@@ -64,7 +68,7 @@ You may use `require('anyfetch-file-hydrater').hydrationError` as a special erro
 ```js
 var myHydrationFunction = function(filePath, document, cb) {
   // Do stuff with the file...
-  cb(new require('anyfetch-file-hydrater').hydrationError("Corrupted file"));
+  cb(new anyfetchFileHydrater.hydrationError("Corrupted file"));
 };
 ```
 
