@@ -1,10 +1,10 @@
-AnyFetch file hydrater
+AnyFetch hydrater
 ====================
-[![Build Status](https://travis-ci.org/AnyFetch/anyfetch-file-hydrater.js.png?branch=master)](https://travis-ci.org/AnyFetch/anyfetch-file-hydrater.js)[![Dependency Status](https://gemnasium.com/AnyFetch/anyfetch-file-hydrater.js.png)](https://gemnasium.com/AnyFetch/anyfetch-file-hydrater.js)
-[![Coverage Status](https://coveralls.io/repos/AnyFetch/anyfetch-file-hydrater.js/badge.png?branch=master)](https://coveralls.io/r/AnyFetch/anyfetch-file-hydrater?branch=master)
-[![NPM version](https://badge.fury.io/js/anyfetch-file-hydrater.png)](http://badge.fury.io/js/anyfetch-file-hydrater)
+[![Build Status](https://travis-ci.org/AnyFetch/anyfetch-hydrater.js.png?branch=master)](https://travis-ci.org/AnyFetch/anyfetch-hydrater.js)[![Dependency Status](https://gemnasium.com/AnyFetch/anyfetch-hydrater.js.png)](https://gemnasium.com/AnyFetch/anyfetch-hydrater.js)
+[![Coverage Status](https://coveralls.io/repos/AnyFetch/anyfetch-hydrater.js/badge.png?branch=master)](https://coveralls.io/r/AnyFetch/anyfetch-hydrater?branch=master)
+[![NPM version](https://badge.fury.io/js/anyfetch-hydrater.png)](http://badge.fury.io/js/anyfetch-hydrater)
 
-Base library for file hydration on http://anyfetch.com.
+Base library for hydration on http://anyfetch.com.
 
 This library allows you to create a hydrater server from a single function. Taking an optional file path and initial data, it should return improved or augmented data.
 
@@ -18,18 +18,18 @@ Usage
 ```js
 'use strict';
 
-var anyfetchFileHydrater = require('anyfetch-file-hydrater');
+var anyfetchHydrater = require('anyfetch-hydrater');
 
 /**
  * Hydration function, to add metadata to the document
  *
- * @param {String} filePath Path to the file from which hydrate, downloaded for you on the filesystem
+ * @param {String} filePath Path to the file from which hydrate, downloaded for you on the filesystem (or null if no file)
  * @param {Object} document Data currently known (from previous hydraters, or from providers). Always includes `document_type`, `metadata`, `data` and `actions` keys.
  * @param {Object} changes Convenience object provided with empty keys `document_type`, `metadata`, `data` and `actions`. Add your changes in there.
  * @param {Function} cb(err, changes) Call this with an error if any, or pass your changes as second parameter.
  */
 var myHydrationFunction = function(path, document, changes, cb)
-  // Extract interesting stuff from the file...
+  // Extract interesting stuff from the file or the document...
   // Improve the document...
 
   cb(err, changes);
@@ -39,7 +39,7 @@ var config = {
   'hydrater_function': myHydrationFunction
 };
 
-var hydrationServer = anyfetchFileHydrater.createServer(config);
+var hydrationServer = anyfetchHydrater.createServer(config);
 hydrationServer.listen(8000);
 ```
 
@@ -65,12 +65,12 @@ POST <your_hydrater_server_url>/hydrate
 
 Errors
 ------
-You may use `require('anyfetch-file-hydrater').hydrationError` as a special error to inform the hydration was unable to complete, and should not be tried again:
+You may use `require('anyfetch-hydrater').hydrationError` as a special error to inform the hydration was unable to complete, and should not be tried again:
 
 ```js
 var myHydrationFunction = function(filePath, document, cb) {
-  // Do stuff with the file...
-  cb(new anyfetchFileHydrater.hydrationError("Corrupted file"));
+  // Do stuff with the file or the document...
+  cb(new anyfetchHydrater.hydrationError("Corrupted file"));
 };
 ```
 

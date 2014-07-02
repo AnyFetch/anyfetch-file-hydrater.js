@@ -1,6 +1,6 @@
 {
-  "name": "anyfetch-file-hydrater",
-  "description": "Create file hydrater for AnyFetch.",
+  "name": "anyfetch-hydrater",
+  "description": "Create hydrater for AnyFetch.",
   "version": "0.2.19",
   "author": "Matthieu Bacconnier <matthieu.bacconnier@papiel.fr>",
   "scripts": {
@@ -10,7 +10,7 @@
   "main": "./lib",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AnyFetch/anyfetch-file-hydrater.js"
+    "url": "https://github.com/AnyFetch/anyfetch-hydrater.js"
   },
   "keywords": [
     "anyfetch",
