@@ -1,7 +1,7 @@
 {
   "name": "anyfetch-hydrater",
   "description": "Create hydrater for AnyFetch.",
-  "version": "0.2.20",
+  "version": "0.2.30",
   "author": "Matthieu Bacconnier <matthieu.bacconnier@papiel.fr>",
   "scripts": {
     "test": "NODE_ENV=test mocha -R spec test/",
