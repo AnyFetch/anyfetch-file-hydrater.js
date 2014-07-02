@@ -6,7 +6,7 @@ AnyFetch file hydrater
 
 Base library for file hydration on http://anyfetch.com.
 
-This library allows you to create a hydrater server from a single function. Taking an optionnal file path and initial data, it should return improved or augmented data.
+This library allows you to create a hydrater server from a single function. Taking an optional file path and initial data, it should return improved or augmented data.
 
 Read first
 ----------
