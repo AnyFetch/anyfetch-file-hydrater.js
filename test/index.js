@@ -25,18 +25,6 @@ describe('POST /hydrate', function() {
 
   var server = anyfetchFileHydrater.createServer(config);
 
-  it('should refuse request without file_path', function(done) {
-    request(server).post('/hydrate')
-      .send({
-        'callback': 'http://anyfetch.com/callback',
-        'document': {
-          'metadata': {},
-        }
-      })
-      .expect(409)
-      .end(done);
-  });
-
   it('should refuse request without callback', function(done) {
     request(server).post('/hydrate')
       .send({
