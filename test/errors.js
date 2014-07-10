@@ -17,6 +17,8 @@ describe('Errors', function() {
   var config = {
     hydrater_function: buggyHydrater,
     logger: function() {// Will be pinged with error. We don't care.
+    },
+    errLogger: function() {// Will be pinged with error. We don't care.
     }
   };
   var hydrationServer = anyfetchFileHydrater.createServer(config);
