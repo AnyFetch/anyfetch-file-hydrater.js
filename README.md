@@ -61,7 +61,8 @@ POST <your_hydrater_server_url>/hydrate
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
 
 * `concurrency`: max number of simultaneous calls to your hydrater function (default: 1)
-* `logger`: function to use for logging error and success. It will get called with strings when a task is started or ended. When an error occured, you'll get the path of the file, and the err as second argument).
+* `logger`: function to use for logging. It will get called with strings when a task is started or ended, default to `console.log`.
+* `errLogger`: function to use for logging errors, default to `console.warn`.
 
 Errors
 ------
