@@ -23,7 +23,7 @@
     "supertest": "^0.13.0"
   },
   "devDependencies": {
-    "should": "^3.3.2",
+    "should": "^4.0.4",
     "mocha": "^1.20.1"
   },
   "licence": "MIT",

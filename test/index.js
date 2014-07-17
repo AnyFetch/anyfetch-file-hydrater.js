@@ -112,7 +112,7 @@ describe('createServer()', function() {
     try {
       anyfetchFileHydrater.createServer({});
     } catch(e) {
-      e.toString().should.include('hydrater_function');
+      e.toString().should.containDeep('hydrater_function');
       return done();
     }
 
