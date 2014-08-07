@@ -67,3 +67,42 @@ describe("Hydrated document", function() {
     });
   });
 });
+
+
+describe.skip('Timeout', function() {
+  it('should send an error', function(done) {
+
+    var tooLongHydrater = function(path, document, changes, cb) {
+      setTimeout(function(){
+        cb(null, changes);
+
+      }, 1000);
+
+    };
+
+    var config = {
+      hydrater_function: tooLongHydrater,
+      logger: function(str, err) {
+        if(err) {
+          throw err;
+        }
+      }
+    };
+    var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+
+    var task = {
+      callback: "http://wedontcare.com",
+      filepath: "/tmp/anyfetch-hydrater.test",
+      document: {
+        id: "azerty"
+      }
+    };
+
+    hydrate(task, function(changes) {
+      changes.should.have.property('hydration_errored', true);
+      done();
+    });
+
+
+  });
+});
