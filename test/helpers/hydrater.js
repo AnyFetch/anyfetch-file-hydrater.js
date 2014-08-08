@@ -71,13 +71,10 @@ describe("Hydrated document", function() {
 
 describe('Timeout', function() {
   it('should send an error', function(done) {
-
     var tooLongHydrater = function(path, document, changes, cb) {
       setTimeout(function(){
         cb(null, changes);
-
       }, 1000);
-
     };
 
     var config = {
@@ -102,7 +99,5 @@ describe('Timeout', function() {
       changes.should.have.property('hydration_errored', true);
       done();
     });
-
-
   });
 });
