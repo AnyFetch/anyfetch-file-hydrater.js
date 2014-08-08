@@ -69,7 +69,7 @@ describe("Hydrated document", function() {
 });
 
 
-describe.skip('Timeout', function() {
+describe('Timeout', function() {
   it('should send an error', function(done) {
 
     var tooLongHydrater = function(path, document, changes, cb) {
