@@ -76,3 +76,8 @@ var myHydrationFunction = function(filePath, document, cb) {
 ```
 
 For other (transient) errors, use standard `Error` objects.
+
+
+### Optional env variables
+* `TIMEOUT` in seconds. Time to hydrate a file. After this, the process will stop the file hydration and the next file will be hydrated. Default: 60 sec.
+WARNING: If you use childProcess to spawn something, this something won't be killed. Put an inferior timeout manually on this something
