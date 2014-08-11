@@ -70,16 +70,9 @@ describe("Hydrated document", function() {
 
 
 describe('Timeout', function() {
-  before(function() {
-    process.env.TIMEOUT = 20;
-  });
-
-  after(function() {
-    process.env.TIMEOUT = undefined;
-  });
-
-
   it('should send an error', function(done) {
+    process.env.TIMEOUT = 20;
+
     var tooLongHydrater = function(path, document, changes, cb) {
       setTimeout(function() {
         cb(null, changes);
@@ -106,6 +99,7 @@ describe('Timeout', function() {
 
     hydrate(task, function(changes) {
       changes.should.have.property('hydration_errored', true);
+      process.env.TIMEOUT =  60 * 1000;
       done();
     });
   });
