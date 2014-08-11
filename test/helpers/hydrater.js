@@ -70,11 +70,18 @@ describe("Hydrated document", function() {
 
 
 describe('Timeout', function() {
-  it('should send an error', function(done) {
+  before(function() {
     process.env.TIMEOUT = 20;
+  });
 
+  after(function() {
+    process.env.TIMEOUT = null;
+  });
+
+
+  it('should send an error', function(done) {
     var tooLongHydrater = function(path, document, changes, cb) {
-      setTimeout(function(){
+      setTimeout(function() {
         cb(null, changes);
       }, 1000);
     };
