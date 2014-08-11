@@ -75,7 +75,7 @@ describe('Timeout', function() {
   });
 
   after(function() {
-    process.env.TIMEOUT = null;
+    process.env.TIMEOUT = undefined;
   });
 
 
