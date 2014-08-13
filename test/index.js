@@ -120,11 +120,11 @@ describe('createServer()', function() {
   });
 });
 
-describe('hydrationError()', function() {
+describe('HydrationError()', function() {
   it('should send a custom error', function(done) {
     async.waterfall([
       function callError(cb){
-        cb(new anyfetchFileHydrater.hydrationError("test error"));
+        cb(new anyfetchFileHydrater.HydrationError("test error"));
       }
     ],
     function(err){
