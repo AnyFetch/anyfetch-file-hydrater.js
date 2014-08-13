@@ -66,12 +66,12 @@ POST <your_hydrater_server_url>/hydrate
 
 Errors
 ------
-You may use `require('anyfetch-hydrater').hydrationError` as a special error to inform the hydration was unable to complete, and should not be tried again:
+You may use `require('anyfetch-hydrater').HydrationError` as a special error to inform the hydration was unable to complete, and should not be tried again:
 
 ```js
 var myHydrationFunction = function(filePath, document, cb) {
   // Do stuff with the file or the document...
-  cb(new anyfetchHydrater.hydrationError("Corrupted file"));
+  cb(new anyfetchHydrater.HydrationError("Corrupted file"));
 };
 ```
 

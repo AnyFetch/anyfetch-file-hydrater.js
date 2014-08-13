@@ -91,7 +91,7 @@ describe('hydrationErrors', function() {
   var erroredHydrater = function(path, document, changes, cb) {
     // Fake async stuff
     process.nextTick(function() {
-      cb(new anyfetchFileHydrater.hydrationError("hydrater errored"));
+      cb(new anyfetchFileHydrater.HydrationError("hydrater errored"));
     });
   };
 
