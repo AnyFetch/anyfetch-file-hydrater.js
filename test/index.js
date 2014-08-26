@@ -5,15 +5,8 @@ var request = require('supertest');
 var async = require('async');
 var anyfetchFileHydrater = require('../lib/');
 
-
-var dummyHydrater = function(path, document, changes, cb) {
-  changes.metadata.hydrated = true;
-
-  cb(null, changes);
-};
-
 var config = {
-  hydrater_function: dummyHydrater,
+  hydrater_function: __dirname + '/hydraters/dummy-hydrater.js',
   logger: function(str, err) {
     if(err) {
       throw err;

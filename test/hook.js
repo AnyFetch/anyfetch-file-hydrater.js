@@ -9,7 +9,7 @@ var fs = require('fs');
 var anyfetchFileHydrater = require('../lib/');
 
 
-describe('/hydrate webhooks', function() {
+describe.skip('/hydrate webhooks', function() {
   // Patch AnyFetch URL
   // Avoid uselessly pinging anyfetch.com with invalid requests
   process.env.ANYFETCH_API_URL = 'http://localhost';

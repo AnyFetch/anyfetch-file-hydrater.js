@@ -1,20 +1,13 @@
 'use strict';
 
 require('should');
-
+var path = require("path");
 
 
 describe("Hydrated document", function() {
   it("should have only updated changes", function(done) {
-
-    var dummyHydrater = function(path, document, changes, cb) {
-      changes.metadata.hydrated = true;
-
-      cb(null, changes);
-    };
-
     var config = {
-      hydrater_function: dummyHydrater,
+      hydrater_function: path.resolve(__dirname, '../hydraters/dummy-hydrater.js'),
       logger: function(str, err) {
         if(err) {
           throw err;
@@ -24,7 +17,7 @@ describe("Hydrated document", function() {
     var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
 
     var task = {
-      callback: "http://wedontcare.com",
+      callback: "http://osef.com",
       filepath: "/tmp/anyfetch-hydrater.test",
       document: {
         id: "azerty"
@@ -38,14 +31,8 @@ describe("Hydrated document", function() {
   });
 
   it("should keep Dates", function(done) {
-    var dummyHydrater = function(path, document, changes, cb) {
-      changes.creation_date = new Date();
-
-      cb(null, changes);
-    };
-
     var config = {
-      hydrater_function: dummyHydrater,
+      hydrater_function: path.resolve(__dirname, '../hydraters/update-date-hydrater.js'),
       logger: function(str, err) {
         if(err) {
           throw err;
@@ -54,7 +41,7 @@ describe("Hydrated document", function() {
     };
     var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
     var task = {
-      callback: "http://wedontcare.com",
+      callback: "http://osef.com",
       filepath: "/tmp/anyfetch-hydrater.test",
       document: {
         id: "azerty"
@@ -70,17 +57,15 @@ describe("Hydrated document", function() {
 
 
 describe('Timeout', function() {
+var shellFork = require('child_process').fork;
+var HydrationError = require('../../lib/index.js').HydrationError;
+
+
   it('should send an error', function(done) {
     process.env.TIMEOUT = 20;
 
-    var tooLongHydrater = function(path, document, changes, cb) {
-      setTimeout(function() {
-        cb(null, changes);
-      }, 1000);
-    };
-
     var config = {
-      hydrater_function: tooLongHydrater,
+      hydrater_function: path.resolve(__dirname, '../hydraters/too-long-hydrater.js'),
       logger: function(str, err) {
         if(err) {
           throw err;

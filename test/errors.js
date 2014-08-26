@@ -6,16 +6,9 @@ var restify = require('restify');
 
 var anyfetchFileHydrater = require('../lib/');
 
-var buggyHydrater = function() {
-  // Fake async stuff
-  process.nextTick(function() {
-    throw new Error("I'm buggy");
-  });
-};
-
 describe('Errors', function() {
   var config = {
-    hydrater_function: buggyHydrater,
+    hydrater_function: __dirname + '/hydraters/buggy-hydrater.js',
     logger: function() {// Will be pinged with error. We don't care.
     },
     errLogger: function() {// Will be pinged with error. We don't care.
@@ -65,13 +58,13 @@ describe('Errors', function() {
       .end(done);
   });
 
-  it('should be handled gracefully if file does not exists', function(done) {
+  it.only('should be handled gracefully if file does not exists', function(done) {
     this.timeout(10000);
 
     request(hydrationServer).post('/hydrate')
       .send({
-        file_path: 'http://anyfetch.com/NOPE?some_query',
-        callback: 'http://anyfetch.com/result?some_query',
+        file_path: 'http://oseftarace.com/NOPE?some_query',
+        callback: 'http://oseftarace.com/result?some_query',
         document: {
           metadata: {
             "foo": "bar"
@@ -88,15 +81,8 @@ describe('Errors', function() {
 });
 
 describe('hydrationErrors', function() {
-  var erroredHydrater = function(path, document, changes, cb) {
-    // Fake async stuff
-    process.nextTick(function() {
-      cb(new anyfetchFileHydrater.HydrationError("hydrater errored"));
-    });
-  };
-
   var config = {
-    hydrater_function: erroredHydrater,
+    hydrater_function: __dirname + '/hydraters/errored-hydrater.js',
     logger: function() {// Will be pinged with error. We don't care.
     }
   };
@@ -126,7 +112,7 @@ describe('hydrationErrors', function() {
 
     request(hydrationErrorServer).post('/hydrate')
       .send({
-        file_path: 'http://anyfetch.com/',
+        file_path: 'http://osef.com/',
         callback: 'http://127.0.0.1:4242/result',
         document: {
           metadata: {
