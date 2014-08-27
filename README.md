@@ -15,9 +15,9 @@ To understand the role of "hydraters", read the [dedicated documentation page](h
 Usage
 -----
 
+In `path/to/my/function.js`:
 ```js
 'use strict';
-// In path/to/my/function.js
 
 /**
  * Hydration function, to add metadata to the document
