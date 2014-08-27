@@ -90,7 +90,7 @@ describe("hydrate()", function() {
       hydrate(task, function(err, changes) {
         changes.should.have.property('hydration_errored', true);
         process.env.TIMEOUT =  60 * 1000;
-        done();
+        done(err);
       });
     });
   });

@@ -99,7 +99,6 @@ describe('Errors', function() {
     it('should be handled gracefully while hydrating', function(done) {
       var fakeApi = require('./helpers/fake-api.js')();
       fakeApi.patch('/result', function(req, res, next) {
-        //should
         res.send(204);
         next();
 

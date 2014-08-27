@@ -10,7 +10,7 @@ module.exports = function() {
   fakeApi.use(restify.acceptParser(fakeApi.acceptable));
 
   fakeApi.get('/afile', function(req, res, next) {
-    fs.createReadStream(__filename, {encoding: 'utf8'}).pipe(res);
+    fs.createReadStream(__filename).pipe(res);
     next();
   });
   return fakeApi;
