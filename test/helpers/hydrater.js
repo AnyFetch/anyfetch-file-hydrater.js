@@ -1,106 +1,98 @@
 'use strict';
 
 require('should');
+var path = require("path");
+var createFakeApi = require('./fake-api.js');
 
+describe("hydrate()", function() {
+  var fakeApi = createFakeApi();
+  before(function() {
+    fakeApi.listen(4243);
+  });
 
+  after(function() {
+    fakeApi.close();
+  });
 
-describe("Hydrated document", function() {
-  it("should have only updated changes", function(done) {
-
-    var dummyHydrater = function(path, document, changes, cb) {
-      changes.metadata.hydrated = true;
-
-      cb(null, changes);
-    };
-
-    var config = {
-      hydrater_function: dummyHydrater,
-      logger: function(str, err) {
-        if(err) {
-          throw err;
+  describe("Hydrated document", function() {
+    it("should have only updated changes", function(done) {
+      var config = {
+        hydrater_function: path.resolve(__dirname, '../hydraters/dummy-hydrater.js'),
+        logger: function(str, err) {
+          if(err) {
+            throw err;
+          }
         }
-      }
-    };
-    var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
+      };
+      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
 
-    var task = {
-      callback: "http://wedontcare.com",
-      filepath: "/tmp/anyfetch-hydrater.test",
-      document: {
-        id: "azerty"
-      }
-    };
+      var task = {
+        file_path: "http://127.0.0.1:4243/afile",
+        callback: "http://127.0.0.1:4243",
+        document: {
+          id: "azerty"
+        }
+      };
 
-    hydrate(task, function(changes) {
-      changes.should.have.keys(["metadata"]);
-      done();
+      hydrate(task, function(err, changes) {
+        changes.should.have.keys(["metadata"]);
+        done();
+      });
+    });
+
+    it("should keep Dates", function(done) {
+      var config = {
+        hydrater_function: path.resolve(__dirname, '../hydraters/update-date-hydrater.js'),
+        logger: function(str, err) {
+          if(err) {
+            throw err;
+          }
+        }
+      };
+      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
+      var task = {
+        file_path: "http://127.0.0.1:4243/afile",
+        callback: "http://127.0.0.1:4243",
+        document: {
+          id: "azerty"
+        }
+      };
+
+      hydrate(task, function(err, changes) {
+        changes.should.have.keys(["creation_date"]);
+        done();
+      });
     });
   });
 
-  it("should keep Dates", function(done) {
-    var dummyHydrater = function(path, document, changes, cb) {
-      changes.creation_date = new Date();
+  describe('Timeout', function() {
+    it('should send an error', function(done) {
+      process.env.TIMEOUT = 20;
 
-      cb(null, changes);
-    };
-
-    var config = {
-      hydrater_function: dummyHydrater,
-      logger: function(str, err) {
-        if(err) {
-          throw err;
+      var config = {
+        hydrater_function: path.resolve(__dirname, '../hydraters/too-long-hydrater.js'),
+        logger: function(str, err) {
+          if(err) {
+            throw err;
+          }
         }
-      }
-    };
-    var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
-    var task = {
-      callback: "http://wedontcare.com",
-      filepath: "/tmp/anyfetch-hydrater.test",
-      document: {
-        id: "azerty"
-      }
-    };
+      };
+      var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
 
-    hydrate(task, function(changes) {
-      changes.should.have.keys(["creation_date"]);
-      done();
-    });
-  });
-});
-
-
-describe('Timeout', function() {
-  it('should send an error', function(done) {
-    process.env.TIMEOUT = 20;
-
-    var tooLongHydrater = function(path, document, changes, cb) {
-      setTimeout(function() {
-        cb(null, changes);
-      }, 1000);
-    };
-
-    var config = {
-      hydrater_function: tooLongHydrater,
-      logger: function(str, err) {
-        if(err) {
-          throw err;
+      var task = {
+        file_path: "http://127.0.0.1:4243/afile",
+        callback: "http://127.0.0.1:4243",
+        document: {
+          id: "azerty"
         }
-      }
-    };
-    var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+      };
 
-    var task = {
-      callback: "http://wedontcare.com",
-      filepath: "/tmp/anyfetch-hydrater.test",
-      document: {
-        id: "azerty"
-      }
-    };
-
-    hydrate(task, function(changes) {
-      changes.should.have.property('hydration_errored', true);
-      process.env.TIMEOUT =  60 * 1000;
-      done();
+      hydrate(task, function(err, changes) {
+        changes.should.have.property('hydration_errored', true);
+        changes.should.have.property('hydration_error', 'Task took too long.');
+        process.env.TIMEOUT =  60 * 1000;
+        done(err);
+      });
     });
   });
 });
