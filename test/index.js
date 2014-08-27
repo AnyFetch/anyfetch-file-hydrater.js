@@ -15,13 +15,26 @@ var config = {
 };
 
 describe('POST /hydrate', function() {
+  var fakeApi = require('./helpers/fake-api.js')();
+  before(function() {
+
+    fakeApi.patch('/callback', function(req, res, next) {
+      res.send(204);
+      next();
+    });
+    fakeApi.listen(4243);
+  })
+
+  after(function() {
+    fakeApi.close();
+  });
 
   var server = anyfetchFileHydrater.createServer(config);
 
   it('should refuse request without callback', function(done) {
     request(server).post('/hydrate')
       .send({
-        'file_path': 'http://anyfetch.com/file',
+        'file_path': 'http://127.0.0.1:4243/afile',
         'document': {
           'metadata': {},
         }
@@ -33,7 +46,7 @@ describe('POST /hydrate', function() {
   it('should accept request without callback when long_polling', function(done) {
     request(server).post('/hydrate')
       .send({
-        'file_path': 'http://anyfetch.com',
+        'file_path': 'http://127.0.0.1:4243/afile',
         'long_poll': true,
         'document': {
           'metadata': {},
@@ -48,8 +61,8 @@ describe('POST /hydrate', function() {
     request(server)
       .post('/hydrate')
       .send({
-        'file_path': 'http://anyfetch.com/',
-        'callback': 'http://anyfetch.com/callback',
+        'file_path': 'http://127.0.0.1:4243/afile',
+        'callback': 'http://127.0.0.1:4243/callback',
         'document': {
           'metadata': {},
         }
@@ -64,8 +77,8 @@ describe('POST /hydrate', function() {
     request(server)
       .post('/hydrate')
       .send({
-        'file_path': 'http://anyfetch.com/',
-        'callback': 'http://anyfetch.com/callback',
+        'file_path': 'http://127.0.0.1:4243/afile',
+        'callback': 'http://127.0.0.1:4243/callback',
         'long_poll': true,
         'document': {
           'metadata': {},
