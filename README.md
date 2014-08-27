@@ -10,15 +10,14 @@ This library allows you to create a hydrater server from a single function. Taki
 
 Read first
 ----------
-To better understand the role of "hydraters", read the [dedicated documentation page](http://developers.anyfetch.com/guides/using/hydrater.html).
+To understand the role of "hydraters", read the [dedicated documentation page](http://developers.anyfetch.com/guides/using/hydrater.html).
 
 Usage
 -----
 
+In `path/to/my/function.js`:
 ```js
 'use strict';
-
-var anyfetchHydrater = require('anyfetch-hydrater');
 
 /**
  * Hydration function, to add metadata to the document
@@ -28,15 +27,22 @@ var anyfetchHydrater = require('anyfetch-hydrater');
  * @param {Object} changes Convenience object provided with empty keys `document_type`, `metadata`, `data` and `actions`. Add your changes in there.
  * @param {Function} cb(err, changes) Call this with an error if any, or pass your changes as second parameter.
  */
-var myHydrationFunction = function(path, document, changes, cb)
+module.exports = function myHydrationFunction(path, document, changes, cb)
   // Extract interesting stuff from the file or the document...
   // Improve the document...
 
   cb(err, changes);
 };
+```
+
+And then:
+```js
+'use strict';
+
+var anyfetchHydrater = require('anyfetch-hydrater');
 
 var config = {
-  'hydrater_function': myHydrationFunction
+  'hydrater_function': 'path/to/my/function.js'
 };
 
 var hydrationServer = anyfetchHydrater.createServer(config);
@@ -80,4 +86,3 @@ For other (transient) errors, use standard `Error` objects.
 
 ### Optional env variables
 * `TIMEOUT` in ms. Time to hydrate a file. After this, the process will stop the file hydration and the next file will be hydrated. Default: 60 sec.
-WARNING: If you use childProcess to spawn something, this something won't be killed. Put an inferior timeout manually on this something
