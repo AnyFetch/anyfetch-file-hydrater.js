@@ -89,6 +89,7 @@ describe("hydrate()", function() {
 
       hydrate(task, function(err, changes) {
         changes.should.have.property('hydration_errored', true);
+        changes.should.have.property('hydration_error', 'Task took too long.');
         process.env.TIMEOUT =  60 * 1000;
         done(err);
       });
