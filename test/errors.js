@@ -2,8 +2,6 @@
 
 require('should');
 var request = require('supertest');
-var restify = require('restify');
-var fs = require("fs");
 var anyfetchFileHydrater = require('../lib/');
 
 describe('Errors', function() {
@@ -25,7 +23,7 @@ describe('Errors', function() {
         next();
       });
       fakeApi.listen(4243);
-    })
+    });
 
     after(function() {
       fakeApi.close();

@@ -2,7 +2,7 @@
 
 require('should');
 var path = require("path");
-var createFakeApi = require('./fake-api.js')
+var createFakeApi = require('./fake-api.js');
 
 describe("hydrate()", function() {
   var fakeApi = createFakeApi();
@@ -66,10 +66,6 @@ describe("hydrate()", function() {
   });
 
   describe('Timeout', function() {
-  var shellFork = require('child_process').fork;
-  var HydrationError = require('../../lib/index.js').HydrationError;
-
-
     it('should send an error', function(done) {
       process.env.TIMEOUT = 20;
 

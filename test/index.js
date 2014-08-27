@@ -23,7 +23,7 @@ describe('POST /hydrate', function() {
       next();
     });
     fakeApi.listen(4243);
-  })
+  });
 
   after(function() {
     fakeApi.close();

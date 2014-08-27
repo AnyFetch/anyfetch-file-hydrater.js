@@ -1,3 +1,5 @@
+"use strict";
+
 var fs = require("fs");
 
 module.exports = function usefulHydrater(path, document, changes, cb) {

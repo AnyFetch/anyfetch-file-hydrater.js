@@ -2,7 +2,6 @@
 
 require('should');
 var request = require('supertest');
-var restify = require('restify');
 var fs = require("fs");
 var anyfetchFileHydrater = require('../lib/');
 var createFakeApi = require('./helpers/fake-api.js');
@@ -70,6 +69,7 @@ describe('/hydrate webhooks', function() {
     var fakeApi = createFakeApi();
     fakeApi.patch('/result', function(req, res, next) {
       done(new Error("should not be called"));
+      next();
       fakeApi.close();
     });
 
