@@ -42,7 +42,7 @@ And then:
 var anyfetchHydrater = require('anyfetch-hydrater');
 
 var config = {
-  'hydrater_function': 'path/to/my/function.js'
+  'hydrater_function': 'absolute/path/to/my/function.js'
 };
 
 var hydrationServer = anyfetchHydrater.createServer(config);
