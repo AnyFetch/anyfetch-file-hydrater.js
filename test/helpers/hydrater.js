@@ -36,7 +36,7 @@ describe("hydrate()", function() {
 
       hydrate(task, function(err, changes) {
         changes.should.have.keys(["metadata"]);
-        done();
+        done(err);
       });
     });
 
