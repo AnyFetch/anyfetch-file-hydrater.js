@@ -2,6 +2,7 @@
 
 require('should');
 var path = require("path");
+
 var createFakeApi = require('./fake-api.js');
 
 describe("hydrate()", function() {
