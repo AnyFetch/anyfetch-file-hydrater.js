@@ -25,7 +25,7 @@ describe('Hydration should be cleaned every time', function() {
 
     var nodeProccessesAtStart;
     async.waterfall([
-      function getActualNodeProccesses(cb) {
+      function getCurrentNodeProccesses(cb) {
         shellExec('ps aux | grep "[n]ode" -c', cb);
       },
       function setNodeProcessesNumber(stdout, stderr, cb) {
