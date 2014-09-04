@@ -2,8 +2,6 @@
 
 require('should');
 var path = require("path");
-var async = require("async");
-var shellExec = require('child_process').exec;
 
 var createFakeApi = require('./fake-api.js');
 
