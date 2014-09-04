@@ -73,7 +73,8 @@ describe("hydrate()", function() {
         hydrater_function: path.resolve(__dirname, '../hydraters/too-long-hydrater.js'),
         logger: function(str, err) {
           if(err) {
-            throw err;
+            console.log(err)
+            //throw err;
           }
         }
       };
