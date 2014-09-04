@@ -100,7 +100,7 @@ describe("hydrate()", function() {
   });
 });
 
-describe('Hydration', function() {
+describe('Hydration should be cleaned every time', function() {
 
   var fakeApi = createFakeApi();
 
@@ -116,7 +116,7 @@ describe('Hydration', function() {
     fakeApi.close();
   });
 
-  it('should be cleaned every every time', function(done) {
+  it('on normal workflow', function(done) {
     this.timeout(10000);
 
     var nodeProccessesAtStart;
@@ -151,8 +151,110 @@ describe('Hydration', function() {
           },
           function hydrateAndCheck(cb) {
             hydrate(task, function(err, changes) {
+              // + one process when working
               changes.metadata.nodeCount.should.eql(nodeProccessesAtStart + 1);
-              cb(err);
+              // +0 process after work
+              shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
+                parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                cb(err);
+              });
+            });
+          },
+          cb
+        );
+      }
+    ], done);
+  });
+
+  it('on crash', function(done) {
+    this.timeout(10000);
+
+    var nodeProccessesAtStart;
+    async.waterfall([
+      function getActualNodeProccesses(cb) {
+        shellExec('ps aux | grep "[n]ode" -c', cb);
+      },
+      function setNodeProcessesNumber(stdout, stderr, cb) {
+        nodeProccessesAtStart = parseInt(stdout);
+        cb();
+      },
+      function hydrateManyTimes(cb) {
+        var config = {
+          hydrater_function: path.resolve(__dirname, '../hydraters/buggy-hydrater.js'),
+          logger: function() {},
+        };
+        var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+
+        var task = {
+          file_path: "http://127.0.0.1:4243/afile",
+          callback: "http://127.0.0.1:4243/result",
+          document: {
+            id: "azerty"
+          },
+        };
+
+        var hydrationCount = 0;
+        async.whilst(
+          function test() {
+            hydrationCount += 1;
+            return hydrationCount < 10;
+          },
+          function hydrateAndCheck(cb) {
+            hydrate(task, function() {
+              // +0 process after work
+              shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
+                parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                cb(err);
+              });
+            });
+          },
+          cb
+        );
+
+      }
+    ], done);
+  });
+
+  it('on error', function(done) {
+    this.timeout(10000);
+
+    var nodeProccessesAtStart;
+    async.waterfall([
+      function getActualNodeProccesses(cb) {
+        shellExec('ps aux | grep "[n]ode" -c', cb);
+      },
+      function setNodeProcessesNumber(stdout, stderr, cb) {
+        nodeProccessesAtStart = parseInt(stdout);
+        cb();
+      },
+      function hydrateManyTimes(cb) {
+        var config = {
+          hydrater_function: path.resolve(__dirname, '../hydraters/erroed-hydrater.js'),
+          logger: function() {},
+        };
+        var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+
+        var task = {
+          file_path: "http://127.0.0.1:4243/afile",
+          callback: "http://127.0.0.1:4243/result",
+          document: {
+            id: "azerty"
+          },
+        };
+
+        var hydrationCount = 0;
+        async.whilst(
+          function test() {
+            hydrationCount += 1;
+            return hydrationCount < 10;
+          },
+          function hydrateAndCheck(cb) {
+             hydrate(task, function() {
+              // +0 process after work
+              shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
+                parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                cb(err);
+              });
             });
           },
           cb
