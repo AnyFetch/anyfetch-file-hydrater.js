@@ -57,9 +57,9 @@ describe('Hydration should be cleaned every time', function() {
             hydrate(task, function(err, changes) {
               // + one process when working
               changes.metadata.nodeCount.should.eql(nodeProccessesAtStart + 1);
-              // +0 process after work
+              // + one process after work if it didn't crash
               shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
-                parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                parseInt(stdout).should.be.eql(nodeProccessesAtStart + 1);
                 cb(err);
               });
             });
@@ -79,7 +79,7 @@ describe('Hydration should be cleaned every time', function() {
         shellExec('ps aux | grep "[n]ode" -c', cb);
       },
       function setNodeProcessesNumber(stdout, stderr, cb) {
-        nodeProccessesAtStart = parseInt(stdout);
+        nodeProccessesAtStart = parseInt(stdout) - 1; // Cause we still have previous child
         cb();
       },
       function hydrateManyTimes(cb) {
