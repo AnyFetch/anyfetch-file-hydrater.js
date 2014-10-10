@@ -11,6 +11,7 @@ describe('/hydrate webhooks', function() {
   it('should be pinged with hydrater result', function(done) {
     var config = {
       hydrater_function: __dirname + '/hydraters/useful-hydrater.js',
+      concurrency: 1,
       logger: function(str, err) {
         if(err) {
           throw err;
