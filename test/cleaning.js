@@ -29,6 +29,8 @@ describe('Hydration should be cleaned every time', function() {
       concurrency: 2,
       logger: function() {},
     };
+
+    process.env.TASKS_PER_PROCESS = 5;
     var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
     var task = {
@@ -74,6 +76,8 @@ describe('Hydration should be cleaned every time', function() {
       concurrency: 2,
       logger: function() {},
     };
+    process.env.TASKS_PER_PROCESS = 5;
+
     var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
     var task = {
@@ -119,6 +123,8 @@ describe('Hydration should be cleaned every time', function() {
       concurrency: 2,
       logger: function() {},
     };
+    process.env.TASKS_PER_PROCESS = 5;
+
     var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
     var task = {
