@@ -7,6 +7,7 @@ var anyfetchFileHydrater = require('../lib/');
 
 var config = {
   hydrater_function: __dirname + '/hydraters/dummy-hydrater.js',
+  concurrency: 1,
   logger: function(str, err) {
     if(err) {
       throw err;

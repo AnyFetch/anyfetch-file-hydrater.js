@@ -2,42 +2,42 @@
 
 var path = require("path");
 var async = require("async");
+var rarity = require("rarity");
 var shellExec = require('child_process').exec;
 var createFakeApi = require('./helpers/fake-api.js');
 
-describe('Hydration should be cleaned every time', function() {
-  var fakeApi = createFakeApi();
+var concurrencies = [1, 2];
+// 5 is less than the number of tasks in our test, and 15 is greater
+var tasksPerProcess = [5, 15];
 
-  fakeApi.patch('/result', function(req, res,next) {
-    res.send(204);
-    next();
-  });
-  before(function() {
-    fakeApi.listen(4243);
-  });
+concurrencies.forEach(function(concurrency) {
+  tasksPerProcess.forEach(function(_tasksPerProcess) {
+    describe('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
+      var fakeApi = createFakeApi();
 
-  after(function() {
-    fakeApi.close();
-  });
+      fakeApi.patch('/result', function(req, res,next) {
+        res.send(204);
+        next();
+      });
+      before(function() {
+        fakeApi.listen(4243);
+      });
 
-  it('on normal workflow', function(done) {
-    this.timeout(10000);
+      after(function() {
+        fakeApi.close();
+      });
 
-    var nodeProccessesAtStart;
-    async.waterfall([
-      function getCurrentNodeProccesses(cb) {
-        shellExec('ps aux | grep "[n]ode" -c', cb);
-      },
-      function setNodeProcessesNumber(stdout, stderr, cb) {
-        nodeProccessesAtStart = parseInt(stdout);
-        cb();
-      },
-      function hydrateManyTimes(cb) {
+      it('on normal workflow', function(done) {
+        this.timeout(10000);
+
         var config = {
           hydrater_function: path.resolve(__dirname, './hydraters/grep-hydrater.js'),
+          concurrency: concurrency,
           logger: function() {},
         };
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+
+        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
         var task = {
           file_path: "http://127.0.0.1:4243/afile",
@@ -47,47 +47,44 @@ describe('Hydration should be cleaned every time', function() {
           },
         };
 
-        var hydrationCount = 0;
-        async.whilst(
-          function test() {
-            hydrationCount += 1;
-            return hydrationCount < 10;
+        async.waterfall([
+          function getCurrentNodeProccesses(cb) {
+            shellExec('ps aux | grep "[n]ode" -c', rarity.slice(2, cb));
           },
-          function hydrateAndCheck(cb) {
-            hydrate(task, function(err, changes) {
-              // + one process when working
-              changes.metadata.nodeCount.should.eql(nodeProccessesAtStart + 1);
-              // + one process after work if it didn't crash
-              shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
-                parseInt(stdout).should.be.eql(nodeProccessesAtStart + 1);
-                cb(err);
-              });
-            });
-          },
-          cb
-        );
-      }
-    ], done);
-  });
+          function hydrateManyTimes(nodeProccessesAtStart, cb) {
+            var hydrationCount = 0;
+            async.whilst(
+              function test() {
+                hydrationCount += 1;
+                return hydrationCount < 10;
+              },
+              function hydrateAndCheck(cb) {
+                hydrate(task, function(err, changes) {
+                  // Reuse existing process during progress
+                  changes.metadata.nodeCount.should.eql(nodeProccessesAtStart);
+                  shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
+                    // keep process open after use
+                    parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                    cb(err);
+                  });
+                });
+              },
+              cb
+            );
+          }
+        ], done);
+      });
 
-  it('on crash', function(done) {
-    this.timeout(10000);
-
-    var nodeProccessesAtStart;
-    async.waterfall([
-      function getActualNodeProccesses(cb) {
-        shellExec('ps aux | grep "[n]ode" -c', cb);
-      },
-      function setNodeProcessesNumber(stdout, stderr, cb) {
-        nodeProccessesAtStart = parseInt(stdout) - 1; // Cause we still have previous child
-        cb();
-      },
-      function hydrateManyTimes(cb) {
+      it('on crash', function(done) {
+        this.timeout(10000);
         var config = {
           hydrater_function: path.resolve(__dirname, './hydraters/buggy-hydrater.js'),
+          concurrency: concurrency,
           logger: function() {},
         };
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
+
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
         var task = {
           file_path: "http://127.0.0.1:4243/afile",
@@ -97,46 +94,44 @@ describe('Hydration should be cleaned every time', function() {
           },
         };
 
-        var hydrationCount = 0;
-        async.whilst(
-          function test() {
-            hydrationCount += 1;
-            return hydrationCount < 10;
+        async.waterfall([
+          function getActualNodeProccesses(cb) {
+            shellExec('ps aux | grep "[n]ode" -c', rarity.slice(2, cb));
           },
-          function hydrateAndCheck(cb) {
-            hydrate(task, function() {
-              // +0 process after work
-              shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
-                parseInt(stdout).should.be.eql(nodeProccessesAtStart);
-                cb(err);
-              });
-            });
-          },
-          cb
-        );
+          function hydrateManyTimes(nodeProccessesAtStart, cb) {
+            var hydrationCount = 0;
+            async.whilst(
+              function test() {
+                hydrationCount += 1;
+                return hydrationCount < 10;
+              },
+              function hydrateAndCheck(cb) {
+                hydrate(task, function() {
+                  // +0 process after work
+                  shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
+                    parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                    cb(err);
+                  });
+                });
+              },
+              cb
+            );
 
-      }
-    ], done);
-  });
+          }
+        ], done);
+      });
 
-  it('on error', function(done) {
-    this.timeout(10000);
+      it('on error', function(done) {
+        this.timeout(10000);
 
-    var nodeProccessesAtStart;
-    async.waterfall([
-      function getActualNodeProccesses(cb) {
-        shellExec('ps aux | grep "[n]ode" -c', cb);
-      },
-      function setNodeProcessesNumber(stdout, stderr, cb) {
-        nodeProccessesAtStart = parseInt(stdout);
-        cb();
-      },
-      function hydrateManyTimes(cb) {
         var config = {
           hydrater_function: path.resolve(__dirname, '../hydraters/erroed-hydrater.js'),
+          concurrency: concurrency,
           logger: function() {},
         };
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
+
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
         var task = {
           file_path: "http://127.0.0.1:4243/afile",
@@ -146,25 +141,31 @@ describe('Hydration should be cleaned every time', function() {
           },
         };
 
-        var hydrationCount = 0;
-        async.whilst(
-          function test() {
-            hydrationCount += 1;
-            return hydrationCount < 10;
+        async.waterfall([
+          function getActualNodeProccesses(cb) {
+            shellExec('ps aux | grep "[n]ode" -c', rarity.slice(2, cb));
           },
-          function hydrateAndCheck(cb) {
-             hydrate(task, function() {
-              // +0 process after work
-              shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
-                parseInt(stdout).should.be.eql(nodeProccessesAtStart);
-                cb(err);
-              });
-            });
-          },
-          cb
-        );
-
-      }
-    ], done);
+          function hydrateManyTimes(nodeProccessesAtStart, cb) {
+            var hydrationCount = 0;
+            async.whilst(
+              function test() {
+                hydrationCount += 1;
+                return hydrationCount < 10;
+              },
+              function hydrateAndCheck(cb) {
+                 hydrate(task, function() {
+                  // +0 process after work
+                  shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
+                    parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                    cb(err);
+                  });
+                });
+              },
+              cb
+            );
+          }
+        ], done);
+      });
+    });
   });
 });

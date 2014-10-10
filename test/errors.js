@@ -7,6 +7,7 @@ var anyfetchFileHydrater = require('../lib/');
 describe('Errors', function() {
   var config = {
     hydrater_function: __dirname + '/hydraters/buggy-hydrater.js',
+    concurrency: 1,
     logger: function() {// Will be pinged with error. We don't care.
     },
     errLogger: function() {// Will be pinged with error. We don't care.

@@ -19,13 +19,14 @@ describe("hydrate()", function() {
     it("should have only updated changes", function(done) {
       var config = {
         hydrater_function: path.resolve(__dirname, '../hydraters/dummy-hydrater.js'),
+        concurrency: 1,
         logger: function(str, err) {
           if(err) {
             throw err;
           }
         }
       };
-      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
+      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.concurrency, config.logger);
 
       var task = {
         file_path: "http://127.0.0.1:4243/afile",
@@ -44,13 +45,14 @@ describe("hydrate()", function() {
     it("should keep Dates", function(done) {
       var config = {
         hydrater_function: path.resolve(__dirname, '../hydraters/update-date-hydrater.js'),
+        concurrency: 1,
         logger: function(str, err) {
           if(err) {
             throw err;
           }
         }
       };
-      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.logger);
+      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.concurrency, config.logger);
       var task = {
         file_path: "http://127.0.0.1:4243/afile",
         callback: "http://127.0.0.1:4243",
@@ -72,13 +74,14 @@ describe("hydrate()", function() {
 
       var config = {
         hydrater_function: path.resolve(__dirname, '../hydraters/too-long-hydrater.js'),
+        concurrency: 1,
         logger: function(str, err) {
           if(err) {
             throw err;
           }
         }
       };
-      var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.logger);
+      var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
       var task = {
         file_path: "http://127.0.0.1:4243/afile",
