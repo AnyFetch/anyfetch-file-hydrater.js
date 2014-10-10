@@ -26,7 +26,7 @@ describe('Hydration should be cleaned every time', function() {
 
     var config = {
       hydrater_function: path.resolve(__dirname, './hydraters/grep-hydrater.js'),
-      concurrency: 1,
+      concurrency: 2,
       logger: function() {},
     };
     var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
@@ -71,7 +71,7 @@ describe('Hydration should be cleaned every time', function() {
     this.timeout(10000);
     var config = {
       hydrater_function: path.resolve(__dirname, './hydraters/buggy-hydrater.js'),
-      concurrency: 1,
+      concurrency: 2,
       logger: function() {},
     };
     var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
@@ -116,7 +116,7 @@ describe('Hydration should be cleaned every time', function() {
 
     var config = {
       hydrater_function: path.resolve(__dirname, '../hydraters/erroed-hydrater.js'),
-      concurrency: 1,
+      concurrency: 2,
       logger: function() {},
     };
     var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
