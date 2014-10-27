@@ -61,10 +61,10 @@ concurrencies.forEach(function(concurrency) {
               function hydrateAndCheck(cb) {
                 hydrate(task, function(err, changes) {
                   // Reuse existing process during progress
-                  changes.metadata.nodeCount.should.eql(nodeProccessesAtStart);
+                  changes.metadata.nodeCount.should.eql(parseInt(nodeProccessesAtStart));
                   shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
                     // keep process open after use
-                    parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                    parseInt(stdout).should.be.eql(parseInt(nodeProccessesAtStart));
                     cb(err);
                   });
                 });
@@ -109,7 +109,7 @@ concurrencies.forEach(function(concurrency) {
                 hydrate(task, function() {
                   // +0 process after work
                   shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
-                    parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                    parseInt(stdout).should.be.eql(parseInt(nodeProccessesAtStart));
                     cb(err);
                   });
                 });
@@ -156,7 +156,7 @@ concurrencies.forEach(function(concurrency) {
                 hydrate(task, function() {
                   // +0 process after work
                   shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
-                    parseInt(stdout).should.be.eql(nodeProccessesAtStart);
+                    parseInt(stdout).should.be.eql(parseInt(nodeProccessesAtStart));
                     cb(err);
                   });
                 });
