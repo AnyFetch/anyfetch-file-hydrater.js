@@ -86,7 +86,7 @@ describe('POST /hydrate', function() {
         }
       })
       .expect(200)
-      .expect(function(res){
+      .expect(function(res) {
         res.body.should.have.property('metadata').and.have.property('hydrated').and.equal(true);
       })
       .end(done);
@@ -130,11 +130,11 @@ describe('createServer()', function() {
 describe('HydrationError()', function() {
   it('should send a custom error', function(done) {
     async.waterfall([
-      function callError(cb){
+      function callError(cb) {
         cb(new anyfetchFileHydrater.HydrationError("test error"));
       }
     ],
-    function(err){
+    function(err) {
       if(err.message === "test error") {
         done();
       }

@@ -15,7 +15,7 @@ concurrencies.forEach(function(concurrency) {
     describe('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
       var fakeApi = createFakeApi();
 
-      fakeApi.patch('/result', function(req, res,next) {
+      fakeApi.patch('/result', function(req, res, next) {
         res.send(204);
         next();
       });
@@ -153,7 +153,7 @@ concurrencies.forEach(function(concurrency) {
                 return hydrationCount < 10;
               },
               function hydrateAndCheck(cb) {
-                 hydrate(task, function() {
+                hydrate(task, function() {
                   // +0 process after work
                   shellExec('ps aux | grep "[n]ode" -c', function(err, stdout) {
                     parseInt(stdout).should.be.eql(nodeProccessesAtStart);
