@@ -51,41 +51,38 @@ describe('Errors', function() {
       };
     });
 
-    it('should be handled gracefully with long_poll option while hydrating', function(done) {
-      request(hydrationServer).post('/hydrate')
-        .send({
-          file_path: 'http://127.0.0.1:4243/afile',
-          callback: 'http://127.0.0.1:4243/result',
-          document: {
-            metadata: {
-              "foo": "bar"
-            },
-          },
-          'long_poll': true
-        })
-        .expect(400)
-        .expect(/err/i)
-        .expect(/buggy/i)
-        .end(done);
-    });
 
     it('should be handled gracefully if file does not exists', function(done) {
       this.timeout(10000);
+
+      var fakeApi = require('./helpers/fake-api.js')();
+      fakeApi.patch('/result', function(req, res, next) {
+        res.send(204);
+        next();
+        if(req.params.hydration_error === 'Error when downloading file http://127.0.0.1:4244/notafile: 404') {
+          done();
+        }
+        else {
+          done(new Error("Should send an error"));
+        }
+        fakeApi.close();
+
+      });
+
+      fakeApi.listen(4244);
+
       request(hydrationServer).post('/hydrate')
         .send({
-          file_path: 'http://127.0.0.1:4243/notafile',
-          callback: 'http://127.0.0.1:4243/result',
+          file_path: 'http://127.0.0.1:4244/notafile',
+          callback: 'http://127.0.0.1:4244/result',
           document: {
             metadata: {
               "foo": "bar"
             },
-          },
-          'long_poll': true
+          }
         })
-        .expect(400)
-        .expect(/err/i)
-        .expect(/downloading file/i)
-        .end(done);
+        .expect(202)
+        .end(function() {});
     });
   });
 
