@@ -27,8 +27,8 @@ describe("hydrate()", function() {
         }
       };
       var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.concurrency, config.logger);
-
-      var task = {
+      var task = {};
+      task.data = {
         file_path: "http://127.0.0.1:4243/afile",
         callback: "http://127.0.0.1:4243",
         document: {
@@ -53,7 +53,8 @@ describe("hydrate()", function() {
         }
       };
       var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, config.concurrency, config.logger);
-      var task = {
+      var task = {};
+      task.data = {
         file_path: "http://127.0.0.1:4243/afile",
         callback: "http://127.0.0.1:4243",
         document: {
@@ -83,7 +84,8 @@ describe("hydrate()", function() {
       };
       var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
-      var task = {
+      var task = {};
+      task.data = {
         file_path: "http://127.0.0.1:4243/afile",
         callback: "http://127.0.0.1:4243",
         document: {

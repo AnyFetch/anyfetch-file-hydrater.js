@@ -12,7 +12,7 @@ var tasksPerProcess = [5, 15];
 
 concurrencies.forEach(function(concurrency) {
   tasksPerProcess.forEach(function(_tasksPerProcess) {
-    describe('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
+    describe.skip('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
       var fakeApi = createFakeApi();
 
       fakeApi.patch('/result', function(req, res, next) {

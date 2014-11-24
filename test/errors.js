@@ -6,12 +6,12 @@ var anyfetchFileHydrater = require('../lib/');
 
 describe('Errors', function() {
   var config = {
+    hydraterUrl: "test-hydrater",
     hydrater_function: __dirname + '/hydraters/buggy-hydrater.js',
     concurrency: 1,
-    logger: function() {// Will be pinged with error. We don't care.
-    },
-    errLogger: function() {// Will be pinged with error. We don't care.
-    }
+    logger: console.log, // Will be pinged with error. We don't care.
+    errLogger: console.log // Will be pinged with error. We don't care.
+
   };
   var hydrationServer = anyfetchFileHydrater.createServer(config);
 
@@ -42,16 +42,15 @@ describe('Errors', function() {
             }
           }
         })
-        .expect(204)
+        .expect(202)
         .end(function() {});
 
-      hydrationServer.queue.drain = function(err) {
-        hydrationServer.queue.drain = null;
-        done(err);
-      };
+      hydrationServer.queue.on('empty', function() {
+        done();
+      });
     });
 
-    it('should be handled gracefully with long_poll option while hydrating', function(done) {
+    it.only('should be handled gracefully with long_poll option while hydrating', function(done) {
       request(hydrationServer).post('/hydrate')
         .send({
           file_path: 'http://127.0.0.1:4243/afile',
@@ -66,7 +65,10 @@ describe('Errors', function() {
         .expect(400)
         .expect(/err/i)
         .expect(/buggy/i)
-        .end(done);
+        .end(function(err) {
+          console.log(err);
+          done(err);
+        });
     });
 
     it('should be handled gracefully if file does not exists', function(done) {
