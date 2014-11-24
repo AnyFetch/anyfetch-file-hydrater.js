@@ -44,19 +44,6 @@ describe('POST /hydrate', function() {
       .end(done);
   });
 
-  it('should accept request without callback when long_polling', function(done) {
-    request(server).post('/hydrate')
-      .send({
-        'file_path': 'http://127.0.0.1:4243/afile',
-        'long_poll': true,
-        'document': {
-          'metadata': {},
-        }
-      })
-      .expect(200)
-      .end(done);
-  });
-
   it('should immediately return 202', function(done) {
     this.timeout(300);
     request(server)
@@ -69,26 +56,6 @@ describe('POST /hydrate', function() {
         }
       })
       .expect(202)
-      .end(done);
-  });
-
-  it('should allow for long polling', function(done) {
-    this.timeout(10000);
-
-    request(server)
-      .post('/hydrate')
-      .send({
-        'file_path': 'http://127.0.0.1:4243/afile',
-        'callback': 'http://127.0.0.1:4243/callback',
-        'long_poll': true,
-        'document': {
-          'metadata': {},
-        }
-      })
-      .expect(200)
-      .expect(function(res) {
-        res.body.should.have.property('metadata').and.have.property('hydrated').and.equal(true);
-      })
       .end(done);
   });
 });
