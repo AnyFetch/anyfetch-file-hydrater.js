@@ -12,7 +12,7 @@ var tasksPerProcess = [5, 15];
 
 concurrencies.forEach(function(concurrency) {
   tasksPerProcess.forEach(function(_tasksPerProcess) {
-    describe.skip('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
+    describe('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
       var fakeApi = createFakeApi();
 
       fakeApi.patch('/result', function(req, res, next) {
@@ -23,8 +23,8 @@ concurrencies.forEach(function(concurrency) {
         fakeApi.listen(4243);
       });
 
-      after(function() {
-        fakeApi.close();
+      after(function(done) {
+        fakeApi.close(done);
       });
 
       it('on normal workflow', function(done) {
@@ -39,7 +39,8 @@ concurrencies.forEach(function(concurrency) {
         process.env.TASKS_PER_PROCESS = _tasksPerProcess;
         var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
-        var task = {
+        var task = {};
+        task.data = {
           file_path: "http://127.0.0.1:4243/afile",
           callback: "http://127.0.0.1:4243/result",
           document: {
@@ -86,7 +87,8 @@ concurrencies.forEach(function(concurrency) {
 
         var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
-        var task = {
+        var task = {};
+        task.data = {
           file_path: "http://127.0.0.1:4243/afile",
           callback: "http://127.0.0.1:4243/result",
           document: {
@@ -133,7 +135,8 @@ concurrencies.forEach(function(concurrency) {
 
         var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
 
-        var task = {
+        var task = {};
+        task.data = {
           file_path: "http://127.0.0.1:4243/afile",
           callback: "http://127.0.0.1:4243/result",
           document: {

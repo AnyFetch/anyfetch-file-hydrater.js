@@ -4,33 +4,40 @@ require('should');
 var request = require('supertest');
 var async = require('async');
 var anyfetchFileHydrater = require('../lib/');
+var createFakeApi = require('./helpers/fake-api.js');
 
 var config = {
   hydrater_function: __dirname + '/hydraters/dummy-hydrater.js',
   concurrency: 1,
-  logger: function(str, err) {
-    if(err) {
-      throw err;
-    }
-  }
+  logger: function() {},
+  errLogger: function() {}
 };
 
 describe('POST /hydrate', function() {
-  var fakeApi = require('./helpers/fake-api.js')();
+  var fakeApi = createFakeApi();
+  var server;
   before(function() {
-
     fakeApi.patch('/callback', function(req, res, next) {
       res.send(204);
       next();
     });
     fakeApi.listen(4243);
+
+    server = anyfetchFileHydrater.createServer(config);
   });
 
-  after(function() {
-    fakeApi.close();
+  after(function clean(done) {
+    async.waterfall([
+      function cleanYaqs(cb) {
+        server.queue.remove(cb);
+      },
+      function cleanApi(cb) {
+        fakeApi.close(cb);
+      },
+    ], function(err) {
+      done(err);
+    });
   });
-
-  var server = anyfetchFileHydrater.createServer(config);
 
   it('should refuse request without callback', function(done) {
     request(server).post('/hydrate')
@@ -62,20 +69,17 @@ describe('POST /hydrate', function() {
 
 
 describe('GET /status', function() {
-  var server = anyfetchFileHydrater.createServer(config);
-
   it('should reply with current status', function(done) {
+    var server = anyfetchFileHydrater.createServer(config);
     request(server).get('/status')
       .expect(200)
       .end(function(err, res) {
         if(err) {
           throw err;
         }
-
         res.body.should.have.property('status', 'ok');
-        res.body.should.have.property('queued_items', 0);
-
-        done();
+        res.body.should.have.property('stats');
+        server.queue.remove(done);
       });
   });
 });
