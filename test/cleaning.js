@@ -5,6 +5,7 @@ var async = require("async");
 var rarity = require("rarity");
 var shellExec = require('child_process').exec;
 var createFakeApi = require('./helpers/fake-api.js');
+var Childs = require('../lib/helpers/Childs');
 
 var concurrencies = [1, 2];
 // 5 is less than the number of tasks in our test, and 15 is greater
@@ -14,13 +15,20 @@ concurrencies.forEach(function(concurrency) {
   tasksPerProcess.forEach(function(_tasksPerProcess) {
     describe('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
       var fakeApi = createFakeApi();
+      var childs;
 
       fakeApi.patch('/result', function(req, res, next) {
         res.send(204);
         next();
       });
+
       before(function() {
         fakeApi.listen(4243);
+      });
+
+      afterEach(function(done) {
+        childs.stopAllChilds();
+        done();
       });
 
       after(function(done) {
@@ -35,9 +43,9 @@ concurrencies.forEach(function(concurrency) {
           concurrency: concurrency,
           logger: function() {},
         };
+        childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
 
         var task = {};
         task.data = {
@@ -83,9 +91,9 @@ concurrencies.forEach(function(concurrency) {
           concurrency: concurrency,
           logger: function() {},
         };
-        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
+        var childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
 
         var task = {};
         task.data = {
@@ -131,9 +139,9 @@ concurrencies.forEach(function(concurrency) {
           concurrency: concurrency,
           logger: function() {},
         };
-        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
+        var childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
 
         var task = {};
         task.data = {

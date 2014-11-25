@@ -7,7 +7,6 @@ var async = require("async");
 var anyfetchFileHydrater = require('../lib/');
 var createFakeApi = require('./helpers/fake-api.js');
 
-
 describe('/hydrate webhooks', function() {
   it('should be pinged with hydrater result', function(done) {
     var config = {
