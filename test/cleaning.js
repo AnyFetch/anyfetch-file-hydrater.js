@@ -4,8 +4,9 @@ var path = require("path");
 var async = require("async");
 var rarity = require("rarity");
 var shellExec = require('child_process').exec;
-var createFakeApi = require('./helpers/fake-api.js');
+
 var Childs = require('../lib/helpers/Childs');
+var createFakeApi = require('./helpers/fake-api.js');
 
 var concurrencies = [1, 2];
 // 5 is less than the number of tasks in our test, and 15 is greater
