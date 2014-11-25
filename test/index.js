@@ -77,8 +77,15 @@ describe('GET /status', function() {
         if(err) {
           throw err;
         }
-        res.body.should.have.property('status', 'ok');
-        res.body.should.have.property('stats');
+        try {
+          res.body.should.have.property('status', 'ok');
+          res.body.should.have.property('pending');
+          res.body.should.have.property('processing');
+          res.body.should.have.property('total');
+        }
+        catch(err) {
+          return done(err);
+        }
         server.queue.remove(done);
       });
   });
