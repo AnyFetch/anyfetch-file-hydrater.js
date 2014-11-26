@@ -5,16 +5,24 @@ var request = require('supertest');
 var anyfetchFileHydrater = require('../lib/');
 
 describe('Errors', function() {
-  var config = {
-    hydrater_function: __dirname + '/hydraters/buggy-hydrater.js',
-    concurrency: 1,
-    logger: function() {// Will be pinged with error. We don't care.
-    },
-    errLogger: function() {// Will be pinged with error. We don't care.
-    }
-  };
-  var hydrationServer = anyfetchFileHydrater.createServer(config);
+  var hydrationServer;
 
+  before(function() {
+    var config = {
+      hydraterUrl: "test-hydrater",
+      hydrater_function: __dirname + '/hydraters/buggy-hydrater.js',
+      concurrency: 1,
+      logger: function() {}, // Will be pinged with error. We don't care.
+      errLogger: function() {} // Will be pinged with error. We don't care.
+
+    };
+
+    hydrationServer = anyfetchFileHydrater.createServer(config);
+  });
+
+  after(function(done) {
+    hydrationServer.queue.remove(done);
+  });
 
   describe('in lib', function() {
     var fakeApi = require('./helpers/fake-api.js')();
@@ -42,15 +50,13 @@ describe('Errors', function() {
             }
           }
         })
-        .expect(204)
+        .expect(202)
         .end(function() {});
 
-      hydrationServer.queue.drain = function(err) {
-        hydrationServer.queue.drain = null;
-        done(err);
-      };
+      hydrationServer.queue.once('empty', function() {
+        done();
+      });
     });
-
 
     it('should be handled gracefully if file does not exists', function(done) {
       this.timeout(10000);
@@ -87,12 +93,21 @@ describe('Errors', function() {
   });
 
   describe('in hydrators', function() {
-    var config = {
-      hydrater_function: __dirname + '/hydraters/errored-hydrater.js',
-      logger: function() {// Will be pinged with error. We don't care.
-      }
-    };
-    var hydrationErrorServer = anyfetchFileHydrater.createServer(config);
+
+    var hydrationErrorServer;
+
+    before(function() {
+      var config = {
+        hydrater_function: __dirname + '/hydraters/errored-hydrater.js',
+        logger: function() {// Will be pinged with error. We don't care.
+        }
+      };
+      hydrationErrorServer = anyfetchFileHydrater.createServer(config);
+    });
+
+    after(function(done) {
+      hydrationErrorServer.queue.remove(done);
+    });
 
     it('should be handled gracefully while hydrating', function(done) {
       var fakeApi = require('./helpers/fake-api.js')();

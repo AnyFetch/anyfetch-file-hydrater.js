@@ -3,23 +3,20 @@
 require('should');
 var request = require('supertest');
 var fs = require("fs");
+var async = require("async");
 var anyfetchFileHydrater = require('../lib/');
 var createFakeApi = require('./helpers/fake-api.js');
-
 
 describe('/hydrate webhooks', function() {
   it('should be pinged with hydrater result', function(done) {
     var config = {
       hydrater_function: __dirname + '/hydraters/useful-hydrater.js',
       concurrency: 1,
-      logger: function(str, err) {
-        if(err) {
-          throw err;
-        }
-      }
+      logger: function() {},
+      errLogger: function() {}
     };
-    var hydrationServer = anyfetchFileHydrater.createServer(config);
 
+    var hydrationServer = anyfetchFileHydrater.createServer(config);
     var fakeApi = createFakeApi();
     fakeApi.patch('/result', function(req, res, next) {
       try {
@@ -31,12 +28,29 @@ describe('/hydrate webhooks', function() {
 
         next();
 
-        done();
-        fakeApi.close();
+        async.waterfall([
+          function cleanYaqs(cb) {
+            hydrationServer.queue.remove(cb);
+          },
+          function cleanApi(cb) {
+            fakeApi.close(cb);
+          },
+        ], function(err) {
+          done(err);
+        });
+
       } catch(e) {
         // We need a try catch cause mocha is try-catching on main event loop, and the server create a new stack.
-        done(e);
-        fakeApi.close();
+        async.waterfall([
+          function cleanYaqs(cb) {
+            hydrationServer.queue.remove(cb);
+          },
+          function cleanApi(cb) {
+            fakeApi.close(cb);
+          },
+        ], function(err) {
+          done(e || err);
+        });
       }
     });
 
@@ -59,19 +73,38 @@ describe('/hydrate webhooks', function() {
   it('should not be pinged on skipped task', function(done) {
     var config = {
       hydrater_function: __dirname + '/hydraters/skipper-hydrater.js',
-      logger: function(str, err) {
-        if(err) {
-          throw err;
-        }
-      }
+      logger: function() {},
+      errLogger: function() {}
     };
     var hydrationServer = anyfetchFileHydrater.createServer(config);
 
+    hydrationServer.queue.on('job.completed', function() {
+      async.waterfall([
+        function cleanYaqs(cb) {
+          hydrationServer.queue.remove(cb);
+        },
+        function cleanApi(cb) {
+          fakeApi.close(cb);
+        },
+      ], function(err) {
+        done(err);
+      });
+    });
+
     var fakeApi = createFakeApi();
     fakeApi.patch('/result', function(req, res, next) {
-      done(new Error("should not be called"));
-      next();
-      fakeApi.close();
+
+      async.waterfall([
+        function cleanYaqs(cb) {
+          hydrationServer.queue.remove(cb);
+        },
+        function cleanApi(cb) {
+          fakeApi.close(cb);
+        },
+      ], function(err) {
+        done(err || new Error("should not be called"));
+        next();
+      });
     });
 
     fakeApi.listen(4243);
@@ -89,12 +122,5 @@ describe('/hydrate webhooks', function() {
       .expect(204)
       .end(function() {});
 
-    var interval = setInterval(function() {
-      if(hydrationServer.queue.length() === 0) {
-        clearInterval(interval);
-        fakeApi.close();
-        done();
-      }
-    }, 25);
   });
 });

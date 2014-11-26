@@ -4,6 +4,8 @@ var path = require("path");
 var async = require("async");
 var rarity = require("rarity");
 var shellExec = require('child_process').exec;
+
+var Childs = require('../lib/helpers/Childs');
 var createFakeApi = require('./helpers/fake-api.js');
 
 var concurrencies = [1, 2];
@@ -14,17 +16,24 @@ concurrencies.forEach(function(concurrency) {
   tasksPerProcess.forEach(function(_tasksPerProcess) {
     describe('Hydration should be cleaned every time with concurrency = ' + concurrency + ' & tasksPerProcess = ' + _tasksPerProcess , function() {
       var fakeApi = createFakeApi();
+      var childs;
 
       fakeApi.patch('/result', function(req, res, next) {
         res.send(204);
         next();
       });
+
       before(function() {
         fakeApi.listen(4243);
       });
 
-      after(function() {
-        fakeApi.close();
+      afterEach(function(done) {
+        childs.stopAllChilds();
+        done();
+      });
+
+      after(function(done) {
+        fakeApi.close(done);
       });
 
       it('on normal workflow', function(done) {
@@ -35,11 +44,12 @@ concurrencies.forEach(function(concurrency) {
           concurrency: concurrency,
           logger: function() {},
         };
+        childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
 
-        var task = {
+        var task = {};
+        task.data = {
           file_path: "http://127.0.0.1:4243/afile",
           callback: "http://127.0.0.1:4243/result",
           document: {
@@ -82,11 +92,12 @@ concurrencies.forEach(function(concurrency) {
           concurrency: concurrency,
           logger: function() {},
         };
-        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
+        var childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
 
-        var task = {
+        var task = {};
+        task.data = {
           file_path: "http://127.0.0.1:4243/afile",
           callback: "http://127.0.0.1:4243/result",
           document: {
@@ -129,11 +140,12 @@ concurrencies.forEach(function(concurrency) {
           concurrency: concurrency,
           logger: function() {},
         };
-        process.env.TASKS_PER_PROCESS = _tasksPerProcess;
+        var childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, config.concurrency, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
 
-        var task = {
+        var task = {};
+        task.data = {
           file_path: "http://127.0.0.1:4243/afile",
           callback: "http://127.0.0.1:4243/result",
           document: {
