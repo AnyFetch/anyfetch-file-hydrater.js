@@ -136,7 +136,7 @@ concurrencies.forEach(function(concurrency) {
         this.timeout(10000);
 
         var config = {
-          hydrater_function: path.resolve(__dirname, '../hydraters/errored-hydrater.js'),
+          hydrater_function: path.resolve(__dirname, './hydraters/errored-hydrater.js'),
           concurrency: concurrency,
           logger: function() {},
         };
