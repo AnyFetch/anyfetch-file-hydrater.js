@@ -99,8 +99,8 @@ describe('Errors', function() {
     before(function() {
       var config = {
         hydrater_function: __dirname + '/hydraters/errored-hydrater.js',
-        logger: function() {// Will be pinged with error. We don't care.
-        }
+        logger: function() {},
+        appName: "hydrators-errors"
       };
       hydrationErrorServer = anyfetchFileHydrater.createServer(config);
     });
@@ -114,7 +114,6 @@ describe('Errors', function() {
       fakeApi.patch('/result', function(req, res, next) {
         res.send(204);
         next();
-
         if(req.params.hydration_errored && req.params.hydration_error === "hydrater errored") {
           done();
         }
