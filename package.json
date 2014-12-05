@@ -19,7 +19,7 @@
   "dependencies": {
     "async": "^0.9.0",
     "bunyan": "^1.2.3",
-    "opbeat": "^1.0.5",
+    "opbeat": "^1.0.6",
     "rarity": "^2.1.1",
     "redis": "^0.12.1",
     "restify": "^2.8.3",
