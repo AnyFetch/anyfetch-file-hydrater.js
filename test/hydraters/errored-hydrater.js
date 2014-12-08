@@ -1,7 +1,7 @@
 "use strict";
 
-var anyfetchFileHydrater = require('../../lib/');
+var HydrationError = require('../../lib/').HydrationError;
 
 module.exports = function erroredHydrater(path, document, changes, cb) {
-  cb(new anyfetchFileHydrater.HydrationError("hydrater errored"));
+  cb(new HydrationError("hydrater errored"));
 };
