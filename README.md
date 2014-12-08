@@ -42,7 +42,9 @@ And then:
 var anyfetchHydrater = require('anyfetch-hydrater');
 
 var config = {
-  'hydrater_function': 'absolute/path/to/my/function.js'
+  'hydrater_function': 'absolute/path/to/my/function.js',
+  'appName': 'Name of your application that will be used in the redis queue',
+  'redisUrl': 'Url of the redis server. If it is not set, it will use localhost on the default port'
 };
 
 var hydrationServer = anyfetchHydrater.createServer(config);
@@ -61,14 +63,13 @@ POST <your_hydrater_server_url>/hydrate
   }
 ```
 
-> In some cases, you may want to bypass the lib and send the result yourself. The property `cb.callbackUrl` tells you where to send the data back to the client. After having sent the data, call `cb()` *without any error or document*. This will finalize hydration, clean the file and start the next task.
+> In some cases, you may want to bypass the lib and send the result yourself. The property `cb.callbackUrl` tells you where to send the data back to the client. After having sent the data, call `cb(null, null)` *without any error or document*. This will finalize hydration, clean the file and start the next task.
 
 ### Optional parameters
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
 
-* `concurrency`: max number of simultaneous calls to your hydrater function (default: 1)
-* `logger`: function to use for logging. It will get called with strings when a task is started or ended, default to `console.log`.
-* `errLogger`: function to use for logging errors, default to `console.warn`.
+* `concurrency`: max number of simultaneous calls to your hydrater function (default: 1).
+* `opbeat`: an object usef for opbeat notifications. It must have `organizationId`, `appId`, `secretToken` keys.
 
 Errors
 ------
