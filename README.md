@@ -68,8 +68,8 @@ POST <your_hydrater_server_url>/hydrate
 ### Optional parameters
 `createServer()` takes an object hash for argument. `hydrater_function` is mandatory, optional values includes:
 
-* `concurrency`: max number of simultaneous calls to your hydrater function (default: 1).
-* `opbeat`: an object usef for opbeat notifications. It must have `organizationId`, `appId`, `secretToken` keys.
+* `concurrency`: max number of simultaneous calls to your hydrater function (default: 1). One child process per concurrency will spawn.
+* `opbeat`: an object used for opbeat notifications. It must have `organizationId`, `appId` and `secretToken` keys.
 
 Errors
 ------
