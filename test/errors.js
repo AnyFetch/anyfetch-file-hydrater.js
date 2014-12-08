@@ -114,7 +114,6 @@ describe('Errors', function() {
       fakeApi.patch('/result', function(req, res, next) {
         res.send(204);
         next();
-        console.log()
         if(req.params.hydration_errored && req.params.hydration_error === "HydrationError: hydrater errored") {
           done();
         }
