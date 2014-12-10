@@ -4,7 +4,7 @@ require('should');
 var request = require('supertest');
 var anyfetchFileHydrater = require('../lib/');
 
-describe('Errors', function() {
+describe.only('Errors', function() {
   var hydrationServer;
 
   before(function() {
@@ -12,9 +12,11 @@ describe('Errors', function() {
       hydraterUrl: "test-hydrater",
       hydrater_function: __dirname + '/hydraters/buggy-hydrater.js',
       concurrency: 1,
-      logger: function() {}, // Will be pinged with error. We don't care.
-      errLogger: function() {} // Will be pinged with error. We don't care.
-
+      opbeat: {
+        organizationId: "azeryy",
+        appId: '123',
+        secretToken: "159753"
+      }
     };
 
     hydrationServer = anyfetchFileHydrater.createServer(config);
@@ -99,8 +101,7 @@ describe('Errors', function() {
     before(function() {
       var config = {
         hydrater_function: __dirname + '/hydraters/errored-hydrater.js',
-        logger: function() {},
-        appName: "hydrators-errors"
+        appName: "hydrators-errors",
       };
       hydrationErrorServer = anyfetchFileHydrater.createServer(config);
     });
