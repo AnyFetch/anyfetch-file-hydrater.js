@@ -1,6 +1,6 @@
 AnyFetch hydrater
 ====================
-[![Build Status](https://travis-ci.org/AnyFetch/anyfetch-hydrater.js.png?branch=master)](https://travis-ci.org/AnyFetch/anyfetch-hydrater.js)[![Dependency Status](https://gemnasium.com/AnyFetch/anyfetch-hydrater.js.png)](https://gemnasium.com/AnyFetch/anyfetch-hydrater.js)
+[![Circle CI](https://circleci.com/gh/AnyFetch/anyfetch-hydrater.js.svg?style=svg)](https://circleci.com/gh/AnyFetch/anyfetch-hydrater.js)[![Dependency Status](https://gemnasium.com/AnyFetch/anyfetch-hydrater.js.png)](https://gemnasium.com/AnyFetch/anyfetch-hydrater.js)
 [![Coverage Status](https://coveralls.io/repos/AnyFetch/anyfetch-hydrater.js/badge.png?branch=master)](https://coveralls.io/r/AnyFetch/anyfetch-hydrater?branch=master)
 [![NPM version](https://badge.fury.io/js/anyfetch-hydrater.png)](http://badge.fury.io/js/anyfetch-hydrater)
 
