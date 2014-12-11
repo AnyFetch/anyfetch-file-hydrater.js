@@ -81,7 +81,6 @@ describe('GET /status', function() {
           res.body.should.have.property('status', 'ok');
           res.body.should.have.property('pending');
           res.body.should.have.property('processing');
-          res.body.should.have.property('total');
         }
         catch(err) {
           return done(err);
