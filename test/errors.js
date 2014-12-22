@@ -31,6 +31,7 @@ describe('Errors', function() {
         res.send(404);
         next();
       });
+
       fakeApi.listen(4243);
     });
 
@@ -80,6 +81,43 @@ describe('Errors', function() {
       request(hydrationServer).post('/hydrate')
         .send({
           file_path: 'http://127.0.0.1:4244/notafile',
+          callback: 'http://127.0.0.1:4244/result',
+          document: {
+            metadata: {
+              "foo": "bar"
+            },
+          }
+        })
+        .expect(202)
+        .end(function() {});
+    });
+
+    it('should be handled gracefully if there is a 410 gone', function(done) {
+      this.timeout(10000);
+
+      var fakeApi = require('./helpers/fake-api.js')();
+      fakeApi.patch('/result', function(req, res, next) {
+        res.send(204);
+        next();
+
+        done(new Error("Should not send an error"));
+        fakeApi.close();
+      });
+
+      fakeApi.get('/410gone', function(req, res, next) {
+        res.send(410);
+        next();
+      });
+
+      fakeApi.listen(4244);
+
+      hydrationServer.queue.once('empty', function() {
+        done();
+      });
+
+      request(hydrationServer).post('/hydrate')
+        .send({
+          file_path: 'http://127.0.0.1:4244/410gone',
           callback: 'http://127.0.0.1:4244/result',
           document: {
             metadata: {
