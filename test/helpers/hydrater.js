@@ -77,7 +77,7 @@ describe("hydrate()", function() {
 
   describe('Timeout', function() {
     it('should send an error', function(done) {
-      process.env.TIMEOUT = 20;
+      process.env.TIMEOUT = 300;
 
       var config = {
         hydrater_function: path.resolve(__dirname, '../hydraters/too-long-hydrater.js'),
