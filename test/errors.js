@@ -66,7 +66,7 @@ describe('Errors', function() {
       fakeApi.patch('/result', function(req, res, next) {
         res.send(204);
         next();
-        if(req.params.hydration_error === 'Error when downloading file http://127.0.0.1:4244/notafile: 404') {
+        if(req.params.hydration_error.toString() === 'Error: Error when downloading file http://127.0.0.1:4244/notafile: 404') {
           done();
         }
         else {
