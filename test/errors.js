@@ -66,8 +66,7 @@ describe('Errors', function() {
       fakeApi.patch('/result', function(req, res, next) {
         res.send(204);
         next();
-
-        if(req.params.hydration_error.toString() === 'Error: Error downloading file: Error: expected 200 "OK", got 404 "Not Found"') {
+        if(req.params.hydration_error.toString() === 'Error: Error downloading file, got status 404') {
           done();
         }
         else {
