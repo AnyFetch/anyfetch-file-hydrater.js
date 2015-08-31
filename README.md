@@ -70,6 +70,7 @@ POST <your_hydrater_server_url>/hydrate
 
 * `concurrency`: max number of simultaneous calls to your hydrater function (default: 1). One child process per concurrency will spawn.
 * `opbeat`: an object used for opbeat notifications. It must have `organizationId`, `appId` and `secretToken` keys.
+* `deniedPorts`: a list of TCP ports (string) to deny. It is useful for security reasons when the hydrater is hosted with others process on the same machine. A hacker could set 'http://127.0.0.1:3000/an-insteresting-file' as file_path and get some valuable data.
 
 Errors
 ------
