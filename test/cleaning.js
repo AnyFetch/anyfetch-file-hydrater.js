@@ -42,11 +42,10 @@ concurrencies.forEach(function(concurrency) {
         var config = {
           hydrater_function: path.resolve(__dirname, './hydraters/grep-hydrater.js'),
           concurrency: concurrency,
-          logger: function() {},
         };
         childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config);
 
         var task = {};
         task.data = {
@@ -90,11 +89,10 @@ concurrencies.forEach(function(concurrency) {
         var config = {
           hydrater_function: path.resolve(__dirname, './hydraters/buggy-hydrater.js'),
           concurrency: concurrency,
-          logger: function() {},
         };
         var childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config);
 
         var task = {};
         task.data = {
@@ -138,11 +136,10 @@ concurrencies.forEach(function(concurrency) {
         var config = {
           hydrater_function: path.resolve(__dirname, './hydraters/errored-hydrater.js'),
           concurrency: concurrency,
-          logger: function() {},
         };
         var childs = new Childs(config.concurrency, _tasksPerProcess);
 
-        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
+        var hydrate = require('../lib/helpers/hydrater.js')(config.hydrater_function, childs, config);
 
         var task = {};
         task.data = {

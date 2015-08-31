@@ -12,8 +12,6 @@ describe('/hydrate webhooks', function() {
     var config = {
       hydrater_function: __dirname + '/hydraters/useful-hydrater.js',
       concurrency: 1,
-      logger: function() {},
-      errLogger: function() {}
     };
 
     var hydrationServer = anyfetchFileHydrater.createServer(config);
@@ -73,8 +71,6 @@ describe('/hydrate webhooks', function() {
   it('should not be pinged on skipped task', function(done) {
     var config = {
       hydrater_function: __dirname + '/hydraters/skipper-hydrater.js',
-      logger: function() {},
-      errLogger: function() {}
     };
     var hydrationServer = anyfetchFileHydrater.createServer(config);
 
