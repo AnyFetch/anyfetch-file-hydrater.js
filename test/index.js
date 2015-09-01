@@ -9,8 +9,6 @@ var createFakeApi = require('./helpers/fake-api.js');
 var config = {
   hydrater_function: __dirname + '/hydraters/dummy-hydrater.js',
   concurrency: 1,
-  logger: function() {},
-  errLogger: function() {}
 };
 
 describe('POST /hydrate', function() {

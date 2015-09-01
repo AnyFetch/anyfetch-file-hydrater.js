@@ -12,9 +12,6 @@ describe('Errors', function() {
       hydraterUrl: "test-hydrater",
       hydrater_function: __dirname + '/hydraters/buggy-hydrater.js',
       concurrency: 1,
-      logger: function() {}, // Will be pinged with error. We don't care.
-      errLogger: function() {} // Will be pinged with error. We don't care.
-
     };
 
     hydrationServer = anyfetchFileHydrater.createServer(config);
@@ -137,7 +134,6 @@ describe('Errors', function() {
     before(function() {
       var config = {
         hydrater_function: __dirname + '/hydraters/errored-hydrater.js',
-        logger: function() {},
         appName: "hydrators-errors"
       };
       hydrationErrorServer = anyfetchFileHydrater.createServer(config);

@@ -22,14 +22,9 @@ describe("hydrate()", function() {
         hydrater_function: path.resolve(__dirname, '../hydraters/dummy-hydrater.js'),
         concurrency: 1,
         tasksPerProcess: process.env.TASKS_PER_PROCESS || 100,
-        logger: function(str, err) {
-          if(err) {
-            throw err;
-          }
-        }
       };
       var childs = new Childs(config.concurrency, config.tasksPerProcess);
-      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, childs, config.logger);
+      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, childs, config);
 
       var task = {};
       task.data = {
@@ -51,14 +46,9 @@ describe("hydrate()", function() {
         hydrater_function: path.resolve(__dirname, '../hydraters/update-date-hydrater.js'),
         concurrency: 1,
         tasksPerProcess: process.env.TASKS_PER_PROCESS || 100,
-        logger: function(str, err) {
-          if(err) {
-            throw err;
-          }
-        }
       };
       var childs = new Childs(config.concurrency, config.tasksPerProcess);
-      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, childs, config.logger);
+      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, childs, config);
       var task = {};
       task.data = {
         file_path: "http://127.0.0.1:4243/afile",
@@ -83,14 +73,9 @@ describe("hydrate()", function() {
         hydrater_function: path.resolve(__dirname, '../hydraters/too-long-hydrater.js'),
         concurrency: 1,
         tasksPerProcess: process.env.TASKS_PER_PROCESS || 100,
-        logger: function(str, err) {
-          if(err) {
-            throw err;
-          }
-        }
       };
       var childs = new Childs(config.concurrency, config.tasksPerProcess);
-      var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, childs, config.logger);
+      var hydrate = require('../../lib/helpers/hydrater.js')(config.hydrater_function, childs, config);
 
       var task = {};
       task.data = {
@@ -106,6 +91,33 @@ describe("hydrate()", function() {
         changes.should.have.property('hydration_error', 'Task took too long.');
         process.env.TIMEOUT =  60 * 1000;
         done(err);
+      });
+    });
+  });
+
+  describe("Denied ports", function() {
+    it("should return errors on forbidden ports", function(done) {
+      var config = {
+        hydrater_function: path.resolve(__dirname, '../hydraters/dummy-hydrater.js'),
+        concurrency: 1,
+        tasksPerProcess: process.env.TASKS_PER_PROCESS || 100,
+        forbiddenPorts: ['9200']
+      };
+      var childs = new Childs(config.concurrency, config.tasksPerProcess);
+      var hydrate = require('../../lib/helpers/hydrater')(config.hydrater_function, childs, config);
+
+      var task = {};
+      task.data = {
+        file_path: "http://127.0.0.1:9200/afile",
+        callback: "http://127.0.0.1:4243",
+        document: {
+          id: "azerty"
+        }
+      };
+
+      hydrate(task, function(err) {
+        err.toString().should.eql('Error: Trying to access forbidden port: 9200');
+        done();
       });
     });
   });
