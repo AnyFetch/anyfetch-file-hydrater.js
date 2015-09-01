@@ -116,7 +116,7 @@ describe("hydrate()", function() {
       };
 
       hydrate(task, function(err) {
-        err.toString().should.eql('Error: Trying to access to a denied port: 9200');
+        err.toString().should.eql('Error: Trying to access forbidden port: 9200');
         done();
       });
     });
